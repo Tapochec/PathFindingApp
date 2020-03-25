@@ -13,6 +13,23 @@ namespace PathFindingApp.Pathfinding
 
         public List<Node> Nodes = new List<Node>();
 
+        public List<Node> GetNeighbors(Node node)
+        {
+            Node left = Nodes.Find(n => (n.X == node.X - 1) && (n.Y == node.Y));
+            Node top = Nodes.Find(n => (n.X == node.X) && (n.Y == node.Y - 1));
+            Node right = Nodes.Find(n => (n.X == node.X + 1) && (n.Y == node.Y));
+            Node down = Nodes.Find(n => (n.X == node.X) && (n.Y == node.Y + 1));
+
+            List<Node> neighbors = new List<Node>();
+            neighbors.Add(left);
+            neighbors.Add(top);
+            neighbors.Add(right);
+            neighbors.Add(down);
+            neighbors.RemoveAll(n => n == null);
+
+            return neighbors;
+        }
+
         public static Grid CreateNodeGrid(int width = 10, int height = 10)
         {
             Grid grid = new Grid

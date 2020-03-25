@@ -12,6 +12,9 @@ namespace PathFindingApp
         static void Main(string[] args)
         {
             Grid grid = Grid.CreateNodeGrid();
+
+            WidthSearch.FillGrid(grid);
+
             grid.PrintGrid();
 
             Console.ReadKey();
