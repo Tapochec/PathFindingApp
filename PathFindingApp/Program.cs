@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PathFindingApp.Pathfinding;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,10 @@ namespace PathFindingApp
     {
         static void Main(string[] args)
         {
+            Grid grid = Grid.CreateNodeGrid();
+            grid.PrintGrid();
+
+            Console.ReadKey();
         }
     }
 }
