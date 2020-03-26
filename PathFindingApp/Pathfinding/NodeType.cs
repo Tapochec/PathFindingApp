@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace PathFindingApp.Pathfinding
 {
-    enum NodeType
+    public enum NodeType
     {
-        Empty = 0,
-        Wall = 1,
+        NotVisited,
+        Visited,
+        NotAvailable,
     }
 }

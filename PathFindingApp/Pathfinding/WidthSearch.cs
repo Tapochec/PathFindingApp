@@ -8,7 +8,7 @@ namespace PathFindingApp.Pathfinding
 {
     static class WidthSearch
     {
-        public static void FillGrid(Grid grid)
+        public static void FillGrid(NodeGrid grid)
         {
             //frontier = Queue()
             //frontier.put(start)
@@ -38,14 +38,11 @@ namespace PathFindingApp.Pathfinding
                     if (!visited.Contains(next))
                     {
                         frontier.Enqueue(next);
+                        next.Type = NodeType.Visited;
                         visited.Add(next);
                     }
                 }
                 counter++;
-
-                grid.PrintGrid();
-                Console.WriteLine();
-                Console.WriteLine();
             }
         }
     }

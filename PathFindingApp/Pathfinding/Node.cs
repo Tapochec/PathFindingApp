@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace PathFindingApp.Pathfinding
 {
-    class Node
+    public class Node
     {
         public int X;
         public int Y;
 
         public string Value = "0";
-        public NodeType Type = NodeType.Empty;
+        public NodeType Type = NodeType.NotVisited;
 
         public Node(int x, int y)
         {
