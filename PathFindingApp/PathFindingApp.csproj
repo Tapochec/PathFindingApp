@@ -67,6 +67,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Pathfinding\Position.cs" />
+    <Compile Include="Pathfinding\Simulating\StepHistoryItem.cs" />
     <Compile Include="View\GridView.xaml.cs">
       <DependentUpon>GridView.xaml</DependentUpon>
     </Compile>

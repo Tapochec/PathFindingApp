@@ -9,7 +9,5 @@
              
              Background="Black"
              Padding="1">
-    <!--<Grid x:Name="SourceGrid">
-        
-    </Grid>-->
+    
 </UserControl>

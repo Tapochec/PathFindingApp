@@ -15,6 +15,27 @@
         <Border Background="AliceBlue">
             <controls:GridView x:Name="GridView"/>
         </Border>
+
+        <StackPanel Grid.Column="1">
+            <Grid Height="25" Margin="10 10 10 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="25"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="25" />
+                </Grid.ColumnDefinitions>
+
+                <Button Content="&lt;-" Click="StepBackClick"/>
+                <Button Grid.Column="1" Margin="5 0" Content="Show" Click="FillViewClick"/>
+                <Button Content="-&gt;" Grid.Column="2" Click="StepForwardClick"/>
+                
+            </Grid>
+
+            <Button
+                Height="25"
+                Margin="10 10 10 0"
+                Content="Clear"
+                Click="ClearViewClick"/>
+        </StackPanel>
         
     </Grid>
 </Window>

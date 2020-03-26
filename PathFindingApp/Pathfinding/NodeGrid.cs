@@ -15,21 +15,19 @@ namespace PathFindingApp.Pathfinding
 
         public Node this[int x, int y]
         {
-            get { return Nodes.Find(n => (n.X == x) && (n.Y == y)); }
+            get { return Nodes.Find(n => (n.Pos.X == x) && (n.Pos.Y == y)); }
         }
 
         public List<Node> GetNeighbors(Node node)
         {
-            Node left = Nodes.Find(n => (n.X == node.X - 1) && (n.Y == node.Y));
-            Node top = Nodes.Find(n => (n.X == node.X) && (n.Y == node.Y - 1));
-            Node right = Nodes.Find(n => (n.X == node.X + 1) && (n.Y == node.Y));
-            Node down = Nodes.Find(n => (n.X == node.X) && (n.Y == node.Y + 1));
-
+            int x = node.Pos.X;
+            int y = node.Pos.Y;
             List<Node> neighbors = new List<Node>();
-            neighbors.Add(left);
-            neighbors.Add(top);
-            neighbors.Add(right);
-            neighbors.Add(down);
+
+            neighbors.Add(this[x - 1, y]);
+            neighbors.Add(this[x, y - 1]);
+            neighbors.Add(this[x + 1, y]);
+            neighbors.Add(this[x, y + 1]);
             neighbors.RemoveAll(n => n == null);
 
             return neighbors;
