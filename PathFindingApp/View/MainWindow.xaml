@@ -12,7 +12,7 @@
             <ColumnDefinition Width="200"/>
         </Grid.ColumnDefinitions>
 
-        <Border Background="AliceBlue">
+        <Border Background="AliceBlue" x:Name="GridViewBorder">
             <controls:GridView x:Name="GridView"/>
         </Border>
 

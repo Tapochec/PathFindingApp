@@ -30,6 +30,8 @@ namespace PathFindingApp.View
         {
             InitializeComponent();
 
+            GridViewBorder.SizeChanged += OnGridViewBorderSizeChanged;
+
             // Data
             _nodeGrid = NodeGrid.CreateNodeGrid();
             _stepsHistory = WidthSearch.FillGridWithHistory(_nodeGrid);
@@ -38,6 +40,13 @@ namespace PathFindingApp.View
             GridView.InitGrid();
             GridView.ShowStep(_stepsHistory.Last());
             _currentStep = _stepsHistory.Count - 1;
+        }
+
+        private void OnGridViewBorderSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            double newSize = Math.Min(e.NewSize.Width, e.NewSize.Height);
+            GridView.Width = newSize;
+            GridView.Height = newSize;
         }
 
         private void FillViewClick(object sender, RoutedEventArgs e)
