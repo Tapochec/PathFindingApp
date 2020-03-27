@@ -10,6 +10,7 @@
         <Label
             x:Name="TileLabel"
             HorizontalContentAlignment="Center"
-            VerticalContentAlignment="Center"/>
+            VerticalContentAlignment="Center"
+            FontWeight="Bold"/>
     </Border>
 </UserControl>
