@@ -54,17 +54,19 @@ namespace PathFindingApp.View
             {
                 for (int x = 0; x < width; x++)
                 {
-                    Label label = new Label
-                    {
-                        Content = "0",
-                        Margin = new Thickness(1),
-                        HorizontalContentAlignment = HorizontalAlignment.Center,
-                        VerticalContentAlignment = VerticalAlignment.Center,
-                        Background = CellTypeBrushes.NotVisited,
-                    };
-                    Grid.SetRow(label, y);
-                    Grid.SetColumn(label, x);
-                    newGrid.Children.Add(label);
+                    Tile tile = Tile.Create(NodeType.NotVisited);
+
+                    //Label label = new Label
+                    //{
+                    //    Content = "0",
+                    //    Margin = new Thickness(1),
+                    //    HorizontalContentAlignment = HorizontalAlignment.Center,
+                    //    VerticalContentAlignment = VerticalAlignment.Center,
+                    //    Background = CellTypeBrushes.NotVisited,
+                    //};
+                    Grid.SetRow(tile, y);
+                    Grid.SetColumn(tile, x);
+                    newGrid.Children.Add(tile);
                 }
             }
 
@@ -89,7 +91,7 @@ namespace PathFindingApp.View
 
                 Node node = grid[x, y];
                 label.Content = node.Value;
-                label.Background = CellTypeBrushes.GetBrushByType(node.Type);
+                //label.Background = CellTypeBrushes.GetBrushByType(node.Type);
             }
 
             IsFilled = true;
@@ -134,42 +136,6 @@ namespace PathFindingApp.View
             }
 
             return labels;
-        }
-    }
-
-    static class CellTypeBrushes
-    {
-        public static Brush Visited => FromHex("ccbfb3"); // Изведанная клетка
-        public static Brush NotVisited => FromHex("ddd5d5"); // Не изведанная клетка
-        public static Brush NotAvailable => FromHex("868679"); // Недоступная клетка (например стена)
-        public static Brush Frontier => FromHex("6688cc"); // Граница
-        public static Brush Active => FromHex("d6e87d"); // Текущая активная ячейка
-        public static Brush NeibghorBorder => FromHex("40bf80"); // Рамка соседа
-        public static Brush Start => FromHex("bf4040"); // Старт
-        public static Brush Path => FromHex("9540bf"); // Путь
-
-        private static Brush FromHex(string hexCode) => new BrushConverter().ConvertFrom('#' + hexCode) as Brush;
-
-        public static Brush GetBrushByType(NodeType type)
-        {
-            Brush result = null;
-
-            switch (type)
-            {
-                case NodeType.NotVisited:
-                    result = NotVisited;
-                    break;
-
-                case NodeType.NotAvailable:
-                    result = NotAvailable;
-                    break;
-
-                case NodeType.Visited:
-                    result = Visited;
-                    break;
-            }
-
-            return result;
         }
     }
 }

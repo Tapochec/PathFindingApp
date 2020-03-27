@@ -11,5 +11,8 @@ namespace PathFindingApp.Pathfinding
         NotVisited,
         Visited,
         NotAvailable,
+        Frontier,
+        Active,
+        Neibghor,
     }
 }
