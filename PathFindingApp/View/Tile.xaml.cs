@@ -21,42 +21,29 @@ namespace PathFindingApp.View
     /// </summary>
     public partial class Tile : UserControl
     {
-        //#region Dependency properties
+        public string LabelText
+        {
+            get { return (string)TileLabel.Content; }
+            set { TileLabel.Content = value; }
+        }
 
-        //public static readonly DependencyProperty TileStyleProperty = DependencyProperty.Register(
-        //    "TileStyle",
-        //    typeof(Style),
-        //    typeof(Tile));
-
-        //public Style TileStyle
-        //{
-        //    get { return (Style)GetValue(TileStyleProperty); }
-        //    set
-        //    {
-        //        SetValue(TileStyleProperty, value);
-                
-        //    }
-        //}
-
-        //#endregion
+        public Style LabelStyle
+        {
+            get { return TileLabel.Style; }
+            set { TileLabel.Style = value; }
+        }
 
         public Tile()
         {
             InitializeComponent();
         }
 
-        public void SetBackground(Brush brush, int uniformMargin = 1)
-        {
-            TileLabel.Background = brush;
-            TileLabel.Margin = new Thickness(uniformMargin);
-        }
-
-        public void SetBorder(Brush brush, int uniformThickness = 4)
-        {
-            TileBorder.BorderBrush = brush;
-            TileBorder.BorderThickness = new Thickness(uniformThickness);
-            TileBorder.Margin = new Thickness(-uniformThickness / 2);
-        }
+        //public void SetBorder(Brush brush, int uniformThickness = 4)
+        //{
+        //    TileBorder.BorderBrush = brush;
+        //    TileBorder.BorderThickness = new Thickness(uniformThickness);
+        //    TileBorder.Margin = new Thickness(-uniformThickness / 2);
+        //}
 
         public static Tile Create(Node node)
         {
@@ -66,35 +53,33 @@ namespace PathFindingApp.View
         public static Tile Create(NodeType type)
         {
             Tile tile = new Tile();
-            Style tileStyle = TileStyles.Default;
+            Style labelStyle = TileStyles.Default;
 
             // Выбор стиля 
             switch (type)
             {
                 case NodeType.Visited:
-                    tileStyle = TileStyles.Visited;
+                    labelStyle = TileStyles.Visited;
                     break;
 
                 case NodeType.NotVisited:
-                    tileStyle = TileStyles.NotVisited;
+                    labelStyle = TileStyles.NotVisited;
                     break;
 
                 case NodeType.NotAvailable:
-                    tileStyle = TileStyles.NotAvailable;
+                    labelStyle = TileStyles.NotAvailable;
                     break;
 
                 case NodeType.Frontier:
-                    tileStyle = TileStyles.Frontier;
+                    labelStyle = TileStyles.Frontier;
                     break;
 
                 case NodeType.Active:
-                    tileStyle = TileStyles.Active;
+                    labelStyle = TileStyles.Active;
                     break;
             }
 
-
-
-            tile.Style = tileStyle;
+            tile.LabelStyle = labelStyle;
             return tile;
         }
 
@@ -112,48 +97,37 @@ namespace PathFindingApp.View
 
         //    private static Brush FromHex(string hexCode) => new BrushConverter().ConvertFrom('#' + hexCode) as Brush;
         //}
-
-        public static class TileStyles
-        {
-            public static readonly Style Default = Create(Brushes.White);
-            public static readonly Style Visited = Create(FromHex("ccbfb3"));
-            public static readonly Style NotVisited = Create(FromHex("ddd5d5"));
-            public static readonly Style NotAvailable = Create(FromHex("868679"), null, 0);
-            public static readonly Style Frontier = Create(FromHex("6688cc"));
-            public static readonly Style Active = Create(FromHex("d6e87d"));
-
-            private static Style Create(Brush labelBrush, Brush bBrush = null, int labelMargin = 1, int bThickness = 4)
-            {
-                Style style = new Style(typeof(Tile));
-                style.Setters.Add(new Setter(
-                    Label.BackgroundProperty, labelBrush, nameof(TileLabel)));
-                style.Setters.Add(new Setter(
-                    Label.MarginProperty, labelMargin, nameof(TileLabel)));
-
-                if (bBrush == null)
-                {
-                    // Reset border style
-                    AddBorderStyle(style, Brushes.Transparent, 0);
-                }
-                else
-                {
-                    AddBorderStyle(style, bBrush, bThickness);
-                }
-
-                return style;
-            }
-
-            private static void AddBorderStyle(Style style, Brush bBrush, int bThickness = 4)
-            {
-                style.Setters.Add(new Setter(
-                    Border.BorderBrushProperty, bBrush, nameof(TileBorder)));
-                style.Setters.Add(new Setter(
-                    Border.BorderThicknessProperty, bThickness, nameof(TileBorder)));
-                style.Setters.Add(new Setter(
-                    Border.MarginProperty, -bThickness / 2, nameof(TileBorder)));
-            }
-
-            private static Brush FromHex(string hexCode) => new BrushConverter().ConvertFrom('#' + hexCode) as Brush;
-        }
     }
+
+    public static class TileStyles
+    {
+        public static readonly Style Default = Create(Brushes.White);
+        public static readonly Style Visited = Create(FromHex("ccbfb3"));
+        public static readonly Style NotVisited = Create(FromHex("ddd5d5"));
+        public static readonly Style NotAvailable = Create(FromHex("868679"), null, 0);
+        public static readonly Style Frontier = Create(FromHex("6688cc"));
+        public static readonly Style Active = Create(FromHex("d6e87d"));
+
+        private static Style Create(Brush labelBrush, Brush bBrush = null, int labelMargin = 1, int bThickness = 4)
+        {
+            Style style = new Style(typeof(Label));
+            style.Setters.Add(new Setter(Label.BackgroundProperty, labelBrush));
+            style.Setters.Add(new Setter(Label.MarginProperty, new Thickness(labelMargin)));
+
+            return style;
+        }
+
+        private static void AddBorderStyle(Style style, Brush bBrush, int bThickness = 4)
+        {
+            style.Setters.Add(new Setter(
+                Border.BorderBrushProperty, bBrush, "TileBorder"));
+            style.Setters.Add(new Setter(
+                Border.BorderThicknessProperty, new Thickness(bThickness), "TileBorder"));
+            style.Setters.Add(new Setter(
+                Border.MarginProperty, new Thickness(-bThickness / 2), "TileBorder"));
+        }
+
+        private static Brush FromHex(string hexCode) => new BrushConverter().ConvertFrom('#' + hexCode) as Brush;
+    }
+
 }

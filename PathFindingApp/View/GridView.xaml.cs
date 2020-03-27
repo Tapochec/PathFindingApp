@@ -55,17 +55,11 @@ namespace PathFindingApp.View
                 for (int x = 0; x < width; x++)
                 {
                     Tile tile = Tile.Create(NodeType.NotVisited);
+                    tile.LabelText = "0";
 
-                    //Label label = new Label
-                    //{
-                    //    Content = "0",
-                    //    Margin = new Thickness(1),
-                    //    HorizontalContentAlignment = HorizontalAlignment.Center,
-                    //    VerticalContentAlignment = VerticalAlignment.Center,
-                    //    Background = CellTypeBrushes.NotVisited,
-                    //};
                     Grid.SetRow(tile, y);
                     Grid.SetColumn(tile, x);
+
                     newGrid.Children.Add(tile);
                 }
             }
@@ -85,12 +79,12 @@ namespace PathFindingApp.View
         {
             foreach (object elem in (Content as Grid).Children)
             {
-                Label label = elem as Label;
-                int x = Grid.GetColumn(label);
-                int y = Grid.GetRow(label);
+                Tile tile = elem as Tile;
+                int x = Grid.GetColumn(tile);
+                int y = Grid.GetRow(tile);
 
                 Node node = grid[x, y];
-                label.Content = node.Value;
+                tile.LabelText = node.Value;
                 //label.Background = CellTypeBrushes.GetBrushByType(node.Type);
             }
 
@@ -102,40 +96,40 @@ namespace PathFindingApp.View
             if (IsFilled)
                 Clear();
 
-            Label[,] labels = GetLabels();
+            Tile[,] tiles = GetTiles();
 
             foreach (var tuple in step.Visited)
             {
-                Label label = labels[tuple.Item1.X, tuple.Item1.Y];
-                label.Background = CellTypeBrushes.Visited;
-                label.Content = tuple.Item2;
+                Tile tile = tiles[tuple.Item1.X, tuple.Item1.Y];
+                tile.LabelStyle = TileStyles.Visited;
+                tile.LabelText = tuple.Item2;
             }
             
             foreach (var tuple in step.Frontier)
             {
-                Label label = labels[tuple.Item1.X, tuple.Item1.Y];
-                label.Background = CellTypeBrushes.Frontier;
-                label.Content = tuple.Item2;
+                Tile tile = tiles[tuple.Item1.X, tuple.Item1.Y];
+                tile.LabelStyle = TileStyles.Frontier;
+                tile.LabelText = tuple.Item2;
             }
 
-            labels[step.Active.Item1.X, step.Active.Item1.Y].Background = CellTypeBrushes.Active;
+            tiles[step.Active.Item1.X, step.Active.Item1.Y].LabelStyle = TileStyles.Active;
 
             IsFilled = true;
         }
 
-        private Label[,] GetLabels()
+        private Tile[,] GetTiles()
         {
-            Label[,] labels = new Label[WidthCount, HeightCount];
+            Tile[,] tiles = new Tile[WidthCount, HeightCount];
 
             for (int y = 0; y < HeightCount; y++)
             {
                 for (int x = 0; x < WidthCount; x++)
                 {
-                    labels[x, y] = ((Content as Grid).Children[y * 10 + x] as Label);
+                    tiles[x, y] = (Content as Grid).Children[y * 10 + x] as Tile;
                 }
             }
 
-            return labels;
+            return tiles;
         }
     }
 }
