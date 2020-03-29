@@ -74,7 +74,7 @@ namespace PathFindingApp.Pathfinding
                 counter++;
 
                 // Добавление сведений о шаге в историю
-                StepHistoryItem hItem = new StepHistoryItem(current, visited, frontier);
+                StepHistoryItem hItem = new StepHistoryItem(current, visited, frontier, grid.Walls);
                 hItems.Add(hItem);
             }
 

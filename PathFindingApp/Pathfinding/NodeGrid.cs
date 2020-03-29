@@ -12,10 +12,19 @@ namespace PathFindingApp.Pathfinding
         public int Heigth;
 
         public List<Node> Nodes = new List<Node>();
+        public List<Node> Walls = new List<Node>();
 
         public Node this[int x, int y]
         {
             get { return Nodes.Find(n => (n.Pos.X == x) && (n.Pos.Y == y)); }
+        }
+
+        public void AddWall(int x, int y)
+        {
+            Node node = this[x, y];
+
+            node.Type = NodeType.NotAvailable;
+            Walls.Add(node);
         }
 
         public List<Node> GetNeighbors(Node node)
@@ -29,6 +38,7 @@ namespace PathFindingApp.Pathfinding
             neighbors.Add(this[x + 1, y]);
             neighbors.Add(this[x, y + 1]);
             neighbors.RemoveAll(n => n == null);
+            neighbors.RemoveAll(n => n.Type == NodeType.NotAvailable); // Исключаем стены
 
             return neighbors;
         }

@@ -55,10 +55,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="View\Tile.xaml.cs">
+    <Compile Include="View\Visualization\GridViewEvents\WallAddedEventArgs.cs" />
+    <Compile Include="View\Visualization\Tile.xaml.cs">
       <DependentUpon>Tile.xaml</DependentUpon>
     </Compile>
-    <Page Include="View\GridView.xaml">
+    <Page Include="View\Visualization\GridView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -72,14 +73,14 @@
     </Compile>
     <Compile Include="Pathfinding\Position.cs" />
     <Compile Include="Pathfinding\Simulating\StepHistoryItem.cs" />
-    <Compile Include="View\GridView.xaml.cs">
+    <Compile Include="View\Visualization\GridView.xaml.cs">
       <DependentUpon>GridView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\Tile.xaml">
+    <Page Include="View\Visualization\Tile.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

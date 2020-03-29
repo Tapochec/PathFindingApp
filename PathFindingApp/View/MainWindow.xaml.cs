@@ -38,8 +38,18 @@ namespace PathFindingApp.View
 
             // View
             GridView.InitGrid();
+            GridView.Data = _nodeGrid;
             //GridView.ShowStep(_stepsHistory.Last());
             //_currentStep = _stepsHistory.Count - 1;
+
+
+            GridView.WallAdded += GridView_WallAdded;
+        }
+
+        private void GridView_WallAdded(object sender, Visualization.GridViewEvents.WallAddedEventArgs e)
+        {
+            _nodeGrid.AddWall(e.X, e.Y);
+            _stepsHistory = WidthSearch.FillGridWithHistory(_nodeGrid);
         }
 
         private void OnGridViewBorderSizeChanged(object sender, SizeChangedEventArgs e)

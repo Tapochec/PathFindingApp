@@ -1,5 +1,6 @@
 ﻿using PathFindingApp.Pathfinding;
 using PathFindingApp.Pathfinding.Simulating;
+using PathFindingApp.View.Visualization.GridViewEvents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,18 +16,22 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace PathFindingApp.View
+namespace PathFindingApp.View.Visualization
 {
     /// <summary>
     /// Interaction logic for GridView.xaml
     /// </summary>
     public partial class GridView : UserControl
     {
+        public event EventHandler<WallAddedEventArgs> WallAdded;
+
         public int WidthCount { get; private set; }
         public int HeightCount { get; private set; }
 
         public bool IsFilled { get; private set; }
-        public bool IsEditMode { get; private set; }
+        public bool CanEdit { get; private set; }
+
+        public NodeGrid Data { get; set; }
 
         public GridView()
         {
@@ -36,8 +41,9 @@ namespace PathFindingApp.View
         public void InitGrid(int xCount = 10, int yCount = 10)
         {
             SetXYCount(xCount, yCount);
-
             Fill();
+
+            CanEdit = true;
         }
 
         public void SetXYCount()
@@ -66,9 +72,30 @@ namespace PathFindingApp.View
             }
         }
 
-        private void OnMouseDown(object sender, MouseButtonEventArgs e)
+        private void SourceGridOnMouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (!CanEdit)
+            {
+                MessageBox.Show("Нельзя редактировать");
+                return;
+            }
 
+            Point point = e.GetPosition(SourceGrid);
+            double actualEdge = SourceGrid.RowDefinitions[0].ActualHeight;
+            int x = Convert.ToInt32(Math.Floor(point.X / actualEdge));
+            int y = Convert.ToInt32(Math.Floor(point.Y / actualEdge));
+
+            //Data[x, y].Type = NodeType.NotAvailable;
+            Tile clickedTile = SourceGrid.Children[y * 10 + x] as Tile;
+            clickedTile.LabelStyle = TileStyles.NotAvailable;
+            clickedTile.LabelText = "";
+
+            OnWallAdded(new WallAddedEventArgs(x, y));
+        }
+
+        private void OnWallAdded(WallAddedEventArgs e)
+        {
+            WallAdded?.Invoke(SourceGrid, e);
         }
 
         public void Clear()
@@ -76,7 +103,9 @@ namespace PathFindingApp.View
             SourceGrid.Children.Clear();
             Fill();
 
+            //Data = null;
             IsFilled = false;
+            CanEdit = true;
         }
 
         public void Fill()
@@ -99,6 +128,8 @@ namespace PathFindingApp.View
 
         public void Fill(NodeGrid grid)
         {
+            Data = grid;
+
             foreach (object elem in (Content as Grid).Children)
             {
                 Tile tile = elem as Tile;
@@ -111,6 +142,7 @@ namespace PathFindingApp.View
             }
 
             IsFilled = true;
+            CanEdit = false;
         }
 
         public void ShowStep(StepHistoryItem step)
@@ -134,9 +166,17 @@ namespace PathFindingApp.View
                 tile.LabelText = tuple.Item2;
             }
 
+            foreach (var pos in step.NotAvailable)
+            {
+                Tile tile = tiles[pos.X, pos.Y];
+                tile.LabelStyle = TileStyles.NotAvailable;
+                tile.LabelText = "";
+            }
+
             tiles[step.Active.Item1.X, step.Active.Item1.Y].LabelStyle = TileStyles.Active;
 
             IsFilled = true;
+            CanEdit = false;
         }
 
         private Tile[,] GetTiles()
