@@ -38,8 +38,8 @@ namespace PathFindingApp.View
 
             // View
             GridView.InitGrid();
-            GridView.ShowStep(_stepsHistory.Last());
-            _currentStep = _stepsHistory.Count - 1;
+            //GridView.ShowStep(_stepsHistory.Last());
+            //_currentStep = _stepsHistory.Count - 1;
         }
 
         private void OnGridViewBorderSizeChanged(object sender, SizeChangedEventArgs e)

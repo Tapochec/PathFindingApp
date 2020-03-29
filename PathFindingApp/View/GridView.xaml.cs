@@ -24,35 +24,67 @@ namespace PathFindingApp.View
     {
         public int WidthCount { get; private set; }
         public int HeightCount { get; private set; }
+
         public bool IsFilled { get; private set; }
+        public bool IsEditMode { get; private set; }
 
         public GridView()
         {
             InitializeComponent();
         }
 
-        public void InitGrid(int width = 10, int height = 10)
+        public void InitGrid(int xCount = 10, int yCount = 10)
         {
-            WidthCount = width;
-            HeightCount = height;
+            SetXYCount(xCount, yCount);
 
-            // Создание самой сетки со столбцами и строками
-            Grid newGrid = new Grid { /*Background = Brushes.Black*/ };
-            for (int x = 0; x < width; x++)
+            Fill();
+        }
+
+        public void SetXYCount()
+        {
+            SetXYCount(WidthCount, HeightCount);
+        }
+
+        // Устанавливает количество строк и столбцов в Grid
+        public void SetXYCount(int xCount, int yCount)
+        {
+            WidthCount = xCount;
+            HeightCount = yCount;
+
+            SourceGrid.RowDefinitions.Clear();
+            SourceGrid.ColumnDefinitions.Clear();
+
+            for (int x = 0; x < xCount; x++)
             {
                 var col = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
-                newGrid.ColumnDefinitions.Add(col);
+                SourceGrid.ColumnDefinitions.Add(col);
             }
-            for (int y = 0; y < width; y++)
+            for (int y = 0; y < yCount; y++)
             {
                 var row = new RowDefinition { Height = new GridLength(1, GridUnitType.Star) };
-                newGrid.RowDefinitions.Add(row);
+                SourceGrid.RowDefinitions.Add(row);
             }
+        }
 
-            // Заполнение
-            for (int y = 0; y < height; y++)
+        private void OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        public void Clear()
+        {
+            SourceGrid.Children.Clear();
+            Fill();
+
+            IsFilled = false;
+        }
+
+        public void Fill()
+        {
+            // Заполнение пустыми ячейками
+            for (int y = 0; y < HeightCount; y++)
             {
-                for (int x = 0; x < width; x++)
+                for (int x = 0; x < WidthCount; x++)
                 {
                     Tile tile = Tile.Create(NodeType.NotVisited);
                     tile.LabelText = "0";
@@ -60,19 +92,9 @@ namespace PathFindingApp.View
                     Grid.SetRow(tile, y);
                     Grid.SetColumn(tile, x);
 
-                    newGrid.Children.Add(tile);
+                    SourceGrid.Children.Add(tile);
                 }
             }
-
-            // Добавление созданной сетки в контент
-            Content = newGrid;
-        }
-
-        public void Clear()
-        {
-            Content = null;
-            InitGrid();
-            IsFilled = false;
         }
 
         public void Fill(NodeGrid grid)
