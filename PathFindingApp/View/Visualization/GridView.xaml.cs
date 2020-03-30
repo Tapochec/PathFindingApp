@@ -24,6 +24,7 @@ namespace PathFindingApp.View.Visualization
     public partial class GridView : UserControl
     {
         public event EventHandler<WallAddedEventArgs> WallAdded;
+        public event EventHandler<WallRemovedEventArgs> WallRemoved;
 
         public int XCount { get; private set; }
         public int YCount { get; private set; }
@@ -85,17 +86,34 @@ namespace PathFindingApp.View.Visualization
             int x = Convert.ToInt32(Math.Floor(point.X / actualEdge));
             int y = Convert.ToInt32(Math.Floor(point.Y / actualEdge));
 
-            //Data[x, y].Type = NodeType.NotAvailable;
             Tile clickedTile = SourceGrid.Children[y * 10 + x] as Tile;
-            clickedTile.LabelStyle = TileStyles.NotAvailable;
-            clickedTile.LabelText = "";
+            
+            switch (clickedTile.Type)
+            {
+                case NodeType.NotAvailable:
+                    clickedTile.LabelStyle = TileStyles.NotVisited;
+                    clickedTile.Type = NodeType.NotVisited;
 
-            OnWallAdded(new WallAddedEventArgs(x, y));
+                    OnWallRemoved(new WallRemovedEventArgs(x, y));
+                    break;
+
+                default:
+                    clickedTile.LabelStyle = TileStyles.NotAvailable;
+                    clickedTile.Type = NodeType.NotAvailable;
+
+                    OnWallAdded(new WallAddedEventArgs(x, y));
+                    break;
+            }
         }
 
         private void OnWallAdded(WallAddedEventArgs e)
         {
             WallAdded?.Invoke(SourceGrid, e);
+        }
+
+        private void OnWallRemoved(WallRemovedEventArgs e)
+        {
+            WallRemoved?.Invoke(SourceGrid, e);
         }
 
         public void Clear()
@@ -116,7 +134,7 @@ namespace PathFindingApp.View.Visualization
                 for (int x = 0; x < XCount; x++)
                 {
                     Tile tile = Tile.Create(NodeType.NotVisited);
-                    tile.LabelText = "0";
+                    //tile.LabelText = "0";
 
                     Grid.SetRow(tile, y);
                     Grid.SetColumn(tile, x);

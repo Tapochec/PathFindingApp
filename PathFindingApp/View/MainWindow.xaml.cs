@@ -45,11 +45,18 @@ namespace PathFindingApp.View
 
 
             GridView.WallAdded += GridView_WallAdded;
+            GridView.WallRemoved += GridView_WallRemoved;
         }
 
         private void GridView_WallAdded(object sender, WallAddedEventArgs e)
         {
             _nodeGrid.AddWall(e.X, e.Y);
+            _history = WidthSearch.FillGridWithHistory(_nodeGrid);
+        }
+
+        private void GridView_WallRemoved(object sender, WallRemovedEventArgs e)
+        {
+            _nodeGrid.RemoveWall(e.X, e.Y);
             _history = WidthSearch.FillGridWithHistory(_nodeGrid);
         }
 

@@ -2,12 +2,12 @@
 
 namespace PathFindingApp.View.Visualization.GridViewEvents
 {
-    public class WallAddedEventArgs : EventArgs
+    public class WallRemovedEventArgs : EventArgs
     {
         public readonly int X;
         public readonly int Y;
 
-        public WallAddedEventArgs(int x, int y)
+        public WallRemovedEventArgs(int x, int y)
         {
             X = x;
             Y = y;

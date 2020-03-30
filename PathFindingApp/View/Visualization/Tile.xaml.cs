@@ -33,6 +33,8 @@ namespace PathFindingApp.View.Visualization
             set { TileLabel.Style = value; }
         }
 
+        public NodeType Type = NodeType.NotVisited;
+
         public Tile()
         {
             InitializeComponent();
@@ -79,7 +81,9 @@ namespace PathFindingApp.View.Visualization
                     break;
             }
 
+            tile.Type = type;
             tile.LabelStyle = labelStyle;
+
             return tile;
         }
 

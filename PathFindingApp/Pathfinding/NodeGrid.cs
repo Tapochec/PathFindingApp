@@ -29,7 +29,13 @@ namespace PathFindingApp.Pathfinding
 
         public void RemoveWall(int x, int y)
         {
+            Node node = Walls.Find(n => (n.Pos.X == x) && (n.Pos.Y == y));
 
+            if (node != null)
+            {
+                node.Type = NodeType.NotVisited;
+                Walls.Remove(node);
+            }
         }
 
         public void RemoveAllWalls()
