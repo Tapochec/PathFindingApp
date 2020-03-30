@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Pathfinding\Simulating\SearchHistory.cs" />
     <Compile Include="View\Visualization\GridViewEvents\WallAddedEventArgs.cs" />
     <Compile Include="View\Visualization\Tile.xaml.cs">
       <DependentUpon>Tile.xaml</DependentUpon>

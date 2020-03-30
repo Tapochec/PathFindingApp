@@ -11,9 +11,9 @@ namespace PathFindingApp.Pathfinding.Simulating
         public readonly Tuple<Position, string> Active;
         public readonly List<Tuple<Position, string>> Visited;
         public readonly List<Tuple<Position, string>> Frontier;
-        public readonly List<Position> NotAvailable;
+        
 
-        public StepHistoryItem(Node active, List<Node> visited, Queue<Node> frontier, List<Node> notAvailable)
+        public StepHistoryItem(Node active, List<Node> visited, Queue<Node> frontier)
         {
             Active = new Tuple<Position, string>(active.Pos, active.Value);
 
@@ -24,8 +24,6 @@ namespace PathFindingApp.Pathfinding.Simulating
             Frontier = new List<Tuple<Position, string>>();
             foreach (Node node in frontier)
                 Frontier.Add(new Tuple<Position, string>(node.Pos, node.Value));
-
-            NotAvailable = notAvailable.Select(n => n.Pos).ToList();
         }
     }
 }

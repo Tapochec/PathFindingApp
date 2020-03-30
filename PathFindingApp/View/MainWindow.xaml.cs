@@ -1,5 +1,6 @@
 ﻿using PathFindingApp.Pathfinding;
 using PathFindingApp.Pathfinding.Simulating;
+using PathFindingApp.View.Visualization.GridViewEvents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace PathFindingApp.View
     public partial class MainWindow : Window
     {
         private NodeGrid _nodeGrid;
-        private List<StepHistoryItem> _stepsHistory;
+        private SearchHistory _history;
         private int _currentStep = -1;
 
         public MainWindow()
@@ -34,7 +35,7 @@ namespace PathFindingApp.View
 
             // Data
             _nodeGrid = NodeGrid.CreateNodeGrid();
-            _stepsHistory = WidthSearch.FillGridWithHistory(_nodeGrid);
+            _history = WidthSearch.FillGridWithHistory(_nodeGrid);
 
             // View
             GridView.InitGrid();
@@ -46,10 +47,10 @@ namespace PathFindingApp.View
             GridView.WallAdded += GridView_WallAdded;
         }
 
-        private void GridView_WallAdded(object sender, Visualization.GridViewEvents.WallAddedEventArgs e)
+        private void GridView_WallAdded(object sender, WallAddedEventArgs e)
         {
             _nodeGrid.AddWall(e.X, e.Y);
-            _stepsHistory = WidthSearch.FillGridWithHistory(_nodeGrid);
+            _history = WidthSearch.FillGridWithHistory(_nodeGrid);
         }
 
         private void OnGridViewBorderSizeChanged(object sender, SizeChangedEventArgs e)
@@ -62,18 +63,18 @@ namespace PathFindingApp.View
         private void FillViewClick(object sender, RoutedEventArgs e)
         {
             //GridView.Fill(_nodeGrid);
-            GridView.ShowStep(_stepsHistory.Last());
-            _currentStep = _stepsHistory.Count - 1;
+            GridView.ShowStep(_history.Steps.Last());
+            _currentStep = _history.Steps.Count - 1;
         }
 
         private void StepForwardClick(object sender, RoutedEventArgs e)
         {
-            if (_currentStep >= _stepsHistory.Count - 1)
+            if (_currentStep >= _history.Steps.Count - 1)
                 return;
 
             _currentStep++;
 
-            GridView.ShowStep(_stepsHistory[_currentStep]);
+            GridView.ShowStep(_history.Steps[_currentStep]);
         }
 
         private void StepBackClick(object sender, RoutedEventArgs e)
@@ -83,11 +84,13 @@ namespace PathFindingApp.View
 
             _currentStep--;
 
-            GridView.ShowStep(_stepsHistory[_currentStep]);
+            GridView.ShowStep(_history.Steps[_currentStep]);
         }
 
         private void ClearViewClick(object sender, RoutedEventArgs e)
         {
+            _nodeGrid.Clear();
+            _history = WidthSearch.FillGridWithHistory(_nodeGrid);
             GridView.Clear();
             _currentStep = -1;
         }

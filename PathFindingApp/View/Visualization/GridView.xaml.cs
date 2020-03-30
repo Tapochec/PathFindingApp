@@ -25,8 +25,8 @@ namespace PathFindingApp.View.Visualization
     {
         public event EventHandler<WallAddedEventArgs> WallAdded;
 
-        public int WidthCount { get; private set; }
-        public int HeightCount { get; private set; }
+        public int XCount { get; private set; }
+        public int YCount { get; private set; }
 
         public bool IsFilled { get; private set; }
         public bool CanEdit { get; private set; }
@@ -48,14 +48,14 @@ namespace PathFindingApp.View.Visualization
 
         public void SetXYCount()
         {
-            SetXYCount(WidthCount, HeightCount);
+            SetXYCount(XCount, YCount);
         }
 
         // Устанавливает количество строк и столбцов в Grid
         public void SetXYCount(int xCount, int yCount)
         {
-            WidthCount = xCount;
-            HeightCount = yCount;
+            XCount = xCount;
+            YCount = yCount;
 
             SourceGrid.RowDefinitions.Clear();
             SourceGrid.ColumnDefinitions.Clear();
@@ -111,9 +111,9 @@ namespace PathFindingApp.View.Visualization
         public void Fill()
         {
             // Заполнение пустыми ячейками
-            for (int y = 0; y < HeightCount; y++)
+            for (int y = 0; y < YCount; y++)
             {
-                for (int x = 0; x < WidthCount; x++)
+                for (int x = 0; x < XCount; x++)
                 {
                     Tile tile = Tile.Create(NodeType.NotVisited);
                     tile.LabelText = "0";
@@ -166,9 +166,9 @@ namespace PathFindingApp.View.Visualization
                 tile.LabelText = tuple.Item2;
             }
 
-            foreach (var pos in step.NotAvailable)
+            foreach (Node node in Data.Walls)
             {
-                Tile tile = tiles[pos.X, pos.Y];
+                Tile tile = tiles[node.Pos.X, node.Pos.Y];
                 tile.LabelStyle = TileStyles.NotAvailable;
                 tile.LabelText = "";
             }
@@ -181,11 +181,11 @@ namespace PathFindingApp.View.Visualization
 
         private Tile[,] GetTiles()
         {
-            Tile[,] tiles = new Tile[WidthCount, HeightCount];
+            Tile[,] tiles = new Tile[XCount, YCount];
 
-            for (int y = 0; y < HeightCount; y++)
+            for (int y = 0; y < YCount; y++)
             {
-                for (int x = 0; x < WidthCount; x++)
+                for (int x = 0; x < XCount; x++)
                 {
                     tiles[x, y] = (Content as Grid).Children[y * 10 + x] as Tile;
                 }

@@ -47,17 +47,18 @@ namespace PathFindingApp.Pathfinding
             }
         }
 
-        public static List<StepHistoryItem> FillGridWithHistory(NodeGrid grid)
+        public static SearchHistory FillGridWithHistory(NodeGrid grid)
         {
-            List<StepHistoryItem> hItems = new List<StepHistoryItem>();
+            List<StepHistoryItem> steps = new List<StepHistoryItem>();
+            Queue<Node> frontier = new Queue<Node>();
+            List<Node> visited = new List<Node>();
 
             Node start = grid.Nodes[35];
-            Queue<Node> frontier = new Queue<Node>();
             frontier.Enqueue(start);
-            List<Node> visited = new List<Node>();
             visited.Add(start);
 
             int counter = 0;
+
             while (frontier.Count != 0)
             {
                 Node current = frontier.Dequeue();
@@ -66,6 +67,7 @@ namespace PathFindingApp.Pathfinding
                 {
                     if (!visited.Contains(next))
                     {
+                        next.Value = (counter + frontier.Count + 1).ToString();
                         frontier.Enqueue(next);
                         next.Type = NodeType.Visited;
                         visited.Add(next);
@@ -74,11 +76,12 @@ namespace PathFindingApp.Pathfinding
                 counter++;
 
                 // Добавление сведений о шаге в историю
-                StepHistoryItem hItem = new StepHistoryItem(current, visited, frontier, grid.Walls);
-                hItems.Add(hItem);
+                StepHistoryItem step = new StepHistoryItem(current, visited, frontier);
+                steps.Add(step);
             }
 
-            return hItems;
+            SearchHistory history = new SearchHistory(steps, grid.Walls);
+            return history;
         }
     }
 }
