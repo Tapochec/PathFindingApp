@@ -23,6 +23,8 @@ namespace PathFindingApp.View
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Node _start;
+        private Node _goal;
         private NodeGrid _nodeGrid;
         private SearchHistory _history;
         private int _currentStep = -1;
@@ -35,7 +37,9 @@ namespace PathFindingApp.View
 
             // Data
             _nodeGrid = NodeGrid.CreateNodeGrid();
-            _history = WidthSearch.FillGridWithHistory(_nodeGrid);
+            _start = _nodeGrid[3, 3];
+            _goal = _nodeGrid[7, 5];
+            _history = WidthSearch.FillGridWithHistory(_nodeGrid, _start, _goal);
 
             // View
             GridView.InitGrid();
@@ -48,16 +52,21 @@ namespace PathFindingApp.View
             GridView.WallRemoved += GridView_WallRemoved;
         }
 
+        private void UpdateSearch()
+        {
+            _history = WidthSearch.FillGridWithHistory(_nodeGrid, _start, _goal);
+        }
+
         private void GridView_WallAdded(object sender, WallAddedEventArgs e)
         {
             _nodeGrid.AddWall(e.X, e.Y);
-            _history = WidthSearch.FillGridWithHistory(_nodeGrid);
+            UpdateSearch();
         }
 
         private void GridView_WallRemoved(object sender, WallRemovedEventArgs e)
         {
             _nodeGrid.RemoveWall(e.X, e.Y);
-            _history = WidthSearch.FillGridWithHistory(_nodeGrid);
+            UpdateSearch();
         }
 
         private void OnGridViewBorderSizeChanged(object sender, SizeChangedEventArgs e)
@@ -97,7 +106,7 @@ namespace PathFindingApp.View
         private void ClearViewClick(object sender, RoutedEventArgs e)
         {
             _nodeGrid.Clear();
-            _history = WidthSearch.FillGridWithHistory(_nodeGrid);
+            UpdateSearch();
             GridView.Clear();
             _currentStep = -1;
         }

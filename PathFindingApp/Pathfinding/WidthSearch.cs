@@ -47,13 +47,13 @@ namespace PathFindingApp.Pathfinding
             }
         }
 
-        public static SearchHistory FillGridWithHistory(NodeGrid grid)
+        public static SearchHistory FillGridWithHistory(NodeGrid grid, Node start, Node goal)
         {
             List<StepHistoryItem> steps = new List<StepHistoryItem>();
             Queue<Node> frontier = new Queue<Node>();
             List<Node> visited = new List<Node>();
 
-            Node start = grid.Nodes[35];
+            //Node start = grid.Nodes[35];
             frontier.Enqueue(start);
             visited.Add(start);
 
@@ -63,6 +63,10 @@ namespace PathFindingApp.Pathfinding
             {
                 Node current = frontier.Dequeue();
                 current.Value = counter.ToString();
+
+                if (current.Pos == goal.Pos)
+                    break;
+
                 foreach (Node next in grid.GetNeighbors(current))
                 {
                     if (!visited.Contains(next))
@@ -80,7 +84,7 @@ namespace PathFindingApp.Pathfinding
                 steps.Add(step);
             }
 
-            SearchHistory history = new SearchHistory(steps, grid.Walls);
+            SearchHistory history = new SearchHistory(start, goal, grid.Walls, steps);
             return history;
         }
     }
