@@ -111,6 +111,10 @@ namespace PathFindingApp.View.Visualization
         public static readonly Style NotAvailable = Create(FromHex("868679"), null, 0);
         public static readonly Style Frontier = Create(FromHex("6688cc"));
         public static readonly Style Active = Create(FromHex("d6e87d"));
+        public static readonly Style Start = Create(FromHex("bf4040"));
+        public static readonly Style Goal = Create(FromHex("bf3faa"));
+        public static readonly Style Path = Create(FromHex("9540bf"));
+
 
         private static Style Create(Brush labelBrush, Brush bBrush = null, int labelMargin = 1, int bThickness = 4)
         {
@@ -121,15 +125,15 @@ namespace PathFindingApp.View.Visualization
             return style;
         }
 
-        private static void AddBorderStyle(Style style, Brush bBrush, int bThickness = 4)
-        {
-            style.Setters.Add(new Setter(
-                Border.BorderBrushProperty, bBrush, "TileBorder"));
-            style.Setters.Add(new Setter(
-                Border.BorderThicknessProperty, new Thickness(bThickness), "TileBorder"));
-            style.Setters.Add(new Setter(
-                Border.MarginProperty, new Thickness(-bThickness / 2), "TileBorder"));
-        }
+        //private static void AddBorderStyle(Style style, Brush bBrush, int bThickness = 4)
+        //{
+        //    style.Setters.Add(new Setter(
+        //        Border.BorderBrushProperty, bBrush, "TileBorder"));
+        //    style.Setters.Add(new Setter(
+        //        Border.BorderThicknessProperty, new Thickness(bThickness), "TileBorder"));
+        //    style.Setters.Add(new Setter(
+        //        Border.MarginProperty, new Thickness(-bThickness / 2), "TileBorder"));
+        //}
 
         private static Brush FromHex(string hexCode) => new BrushConverter().ConvertFrom('#' + hexCode) as Brush;
     }

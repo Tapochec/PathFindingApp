@@ -19,13 +19,13 @@ namespace PathFindingApp.Pathfinding.Simulating
             Node goal,
             List<Node> notAvailable,
             List<StepHistoryItem> steps,
-            List<Position> path = null)
+            List<Node> path = null)
         {
             Start = start.Pos;
             Goal = goal.Pos;
             NotAvailable = notAvailable.Select(n => n.Pos).ToList();
             Steps = steps;
-            Path = path;
+            Path = path.Select(n => n.Pos).ToList();
         }
     }
 }

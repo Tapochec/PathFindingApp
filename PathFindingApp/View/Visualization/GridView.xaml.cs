@@ -163,21 +163,22 @@ namespace PathFindingApp.View.Visualization
             CanEdit = false;
         }
 
-        public void ShowStep(StepHistoryItem step)
+        public void ShowStep(SearchHistory history, int stepIndex)
         {
             if (IsFilled)
                 Clear();
 
             Tile[,] tiles = GetTiles();
+            StepHistoryItem currentStep = history.Steps[stepIndex];
 
-            foreach (var tuple in step.Visited)
+            foreach (var tuple in currentStep.Visited)
             {
                 Tile tile = tiles[tuple.Item1.X, tuple.Item1.Y];
                 tile.LabelStyle = TileStyles.Visited;
                 tile.LabelText = tuple.Item2;
             }
             
-            foreach (var tuple in step.Frontier)
+            foreach (var tuple in currentStep.Frontier)
             {
                 Tile tile = tiles[tuple.Item1.X, tuple.Item1.Y];
                 tile.LabelStyle = TileStyles.Frontier;
@@ -191,7 +192,19 @@ namespace PathFindingApp.View.Visualization
                 tile.LabelText = "";
             }
 
-            tiles[step.Active.Item1.X, step.Active.Item1.Y].LabelStyle = TileStyles.Active;
+            tiles[currentStep.Active.Item1.X, currentStep.Active.Item1.Y].LabelStyle = TileStyles.Active;
+
+            if ((history.Steps.Count - 1) == stepIndex)
+            {
+                foreach (Position pos in history.Path)
+                {
+                    Tile tile = tiles[pos.X, pos.Y];
+                    tile.LabelStyle = TileStyles.Path;
+                }
+            }
+
+            tiles[history.Start.X, history.Start.Y].LabelStyle = TileStyles.Start;
+            tiles[history.Goal.X, history.Goal.Y].LabelStyle = TileStyles.Goal;
 
             IsFilled = true;
             CanEdit = false;

@@ -38,7 +38,7 @@ namespace PathFindingApp.View
             // Data
             _nodeGrid = NodeGrid.CreateNodeGrid();
             _start = _nodeGrid[3, 3];
-            _goal = _nodeGrid[7, 5];
+            _goal = _nodeGrid[8, 7];
             _history = WidthSearch.FillGridWithHistory(_nodeGrid, _start, _goal);
 
             // View
@@ -79,7 +79,7 @@ namespace PathFindingApp.View
         private void FillViewClick(object sender, RoutedEventArgs e)
         {
             //GridView.Fill(_nodeGrid);
-            GridView.ShowStep(_history.Steps.Last());
+            GridView.ShowStep(_history, _history.Steps.Count - 1);
             _currentStep = _history.Steps.Count - 1;
         }
 
@@ -90,7 +90,7 @@ namespace PathFindingApp.View
 
             _currentStep++;
 
-            GridView.ShowStep(_history.Steps[_currentStep]);
+            GridView.ShowStep(_history, _currentStep);
         }
 
         private void StepBackClick(object sender, RoutedEventArgs e)
@@ -100,7 +100,7 @@ namespace PathFindingApp.View
 
             _currentStep--;
 
-            GridView.ShowStep(_history.Steps[_currentStep]);
+            GridView.ShowStep(_history, _currentStep);
         }
 
         private void ClearViewClick(object sender, RoutedEventArgs e)

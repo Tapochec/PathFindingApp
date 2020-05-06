@@ -75,6 +75,7 @@ namespace PathFindingApp.Pathfinding
                         frontier.Enqueue(next);
                         next.Type = NodeType.Visited;
                         visited.Add(next);
+                        next.Prev = current;
                     }
                 }
                 counter++;
@@ -84,7 +85,13 @@ namespace PathFindingApp.Pathfinding
                 steps.Add(step);
             }
 
-            SearchHistory history = new SearchHistory(start, goal, grid.Walls, steps);
+            List<Node> path = new List<Node> { goal };
+            while (path.Last() != start)
+            {
+                path.Add(path.Last().Prev);
+            }
+
+            SearchHistory history = new SearchHistory(start, goal, grid.Walls, steps, path);
             return history;
         }
     }
