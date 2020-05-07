@@ -26,8 +26,8 @@ namespace PathFindingApp.View.Visualization
         public event EventHandler<WallAddedEventArgs> WallAdded;
         public event EventHandler<WallRemovedEventArgs> WallRemoved;
 
-        public int XCount { get; private set; }
-        public int YCount { get; private set; }
+        public int RowCount { get; private set; }
+        public int ColCount { get; private set; }
 
         public bool IsFilled { get; private set; }
         public bool CanEdit { get; private set; }
@@ -39,9 +39,9 @@ namespace PathFindingApp.View.Visualization
             InitializeComponent();
         }
 
-        public void InitGrid(int xCount = 10, int yCount = 10)
+        public void InitGrid(int rowCount = 10, int colCount = 10)
         {
-            SetXYCount(xCount, yCount);
+            SetXYCount(rowCount, colCount);
             Fill();
 
             CanEdit = true;
@@ -49,14 +49,14 @@ namespace PathFindingApp.View.Visualization
 
         public void SetXYCount()
         {
-            SetXYCount(XCount, YCount);
+            SetXYCount(RowCount, ColCount);
         }
 
         // Устанавливает количество строк и столбцов в Grid
         public void SetXYCount(int xCount, int yCount)
         {
-            XCount = xCount;
-            YCount = yCount;
+            RowCount = xCount;
+            ColCount = yCount;
 
             SourceGrid.RowDefinitions.Clear();
             SourceGrid.ColumnDefinitions.Clear();
@@ -129,9 +129,9 @@ namespace PathFindingApp.View.Visualization
         public void Fill()
         {
             // Заполнение пустыми ячейками
-            for (int y = 0; y < YCount; y++)
+            for (int y = 0; y < ColCount; y++)
             {
-                for (int x = 0; x < XCount; x++)
+                for (int x = 0; x < RowCount; x++)
                 {
                     Tile tile = Tile.Create(NodeType.NotVisited);
                     //tile.LabelText = "0";
@@ -171,14 +171,16 @@ namespace PathFindingApp.View.Visualization
             Tile[,] tiles = GetTiles();
             StepHistoryItem currentStep = history.Steps[stepIndex];
 
-            foreach (var tuple in currentStep.Visited)
+            foreach (Tuple<Position, string> tuple in currentStep.Visited)
             {
                 Tile tile = tiles[tuple.Item1.X, tuple.Item1.Y];
                 tile.LabelStyle = TileStyles.Visited;
                 tile.LabelText = tuple.Item2;
+                if (tuple.Item1.HasPrev)
+                    tile.ArrowDir = new Point(tuple.Item1.PrevX - tuple.Item1.X, tuple.Item1.PrevY - tuple.Item1.Y);
             }
             
-            foreach (var tuple in currentStep.Frontier)
+            foreach (Tuple<Position, string> tuple in currentStep.Frontier)
             {
                 Tile tile = tiles[tuple.Item1.X, tuple.Item1.Y];
                 tile.LabelStyle = TileStyles.Frontier;
@@ -212,11 +214,11 @@ namespace PathFindingApp.View.Visualization
 
         private Tile[,] GetTiles()
         {
-            Tile[,] tiles = new Tile[XCount, YCount];
+            Tile[,] tiles = new Tile[RowCount, ColCount];
 
-            for (int y = 0; y < YCount; y++)
+            for (int y = 0; y < ColCount; y++)
             {
-                for (int x = 0; x < XCount; x++)
+                for (int x = 0; x < RowCount; x++)
                 {
                     tiles[x, y] = (Content as Grid).Children[y * 10 + x] as Tile;
                 }

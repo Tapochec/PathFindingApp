@@ -11,10 +11,44 @@ namespace PathFindingApp.Pathfinding
         public readonly int X;
         public readonly int Y;
 
+        public readonly int PrevX;
+        public readonly int PrevY;
+
+        public readonly bool HasPrev;
+
         public Position(int x, int y)
         {
             X = x;
             Y = y;
+            PrevX = -1;
+            PrevY = -1;
+            HasPrev = false;
+        }
+
+        public Position(int x, int y, Position previousNodePos)
+        {
+            X = x;
+            Y = y;
+            PrevX = previousNodePos.X;
+            PrevY = previousNodePos.Y;
+
+            if (PrevX == -1 || PrevY == -1)
+                HasPrev = false;
+            else
+                HasPrev = true;
+        }
+
+        public Position(Position pos, Position previousNodePos)
+        {
+            X = pos.X;
+            Y = pos.Y;
+            PrevX = previousNodePos.X;
+            PrevY = previousNodePos.Y;
+
+            if (PrevX == -1 || PrevY == -1)
+                HasPrev = false;
+            else
+                HasPrev = true;
         }
 
         public override bool Equals(object obj)

@@ -25,7 +25,7 @@ namespace PathFindingApp.Pathfinding.Simulating
             Goal = goal.Pos;
             NotAvailable = notAvailable.Select(n => n.Pos).ToList();
             Steps = steps;
-            Path = path.Select(n => n.Pos).ToList();
+            Path = path?.Select(n => n.Pos).ToList();
         }
     }
 }

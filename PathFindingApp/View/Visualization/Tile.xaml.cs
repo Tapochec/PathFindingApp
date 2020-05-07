@@ -33,19 +33,64 @@ namespace PathFindingApp.View.Visualization
             set { TileLabel.Style = value; }
         }
 
+        private Point _arrowDir;
+        public Point ArrowDir
+        {
+            set
+            {
+                if (value == _arrowDir)
+                    return;
+
+                _arrowDir = value;
+
+                if (SourceGrid.Children.Count == 2)
+                    SourceGrid.Children.RemoveAt(1);
+
+                Polygon poly = new Polygon { Fill = Brushes.Black, Name = "Arrow" };
+                // Лево / право
+                if (value.X != 0)
+                {
+                    if (value.X == -1)
+                    {
+                        poly.Points.Add(new Point(10, 30));
+                        poly.Points.Add(new Point(17, 25));
+                        poly.Points.Add(new Point(17, 35));
+                    }
+                    else
+                    {
+                        poly.Points.Add(new Point(50, 30));
+                        poly.Points.Add(new Point(43, 35));
+                        poly.Points.Add(new Point(43, 25));
+                    }
+                }
+                // Верх / низ
+                else
+                {
+                    if (value.Y == -1)
+                    {
+                        poly.Points.Add(new Point(30, 10));
+                        poly.Points.Add(new Point(25, 17));
+                        poly.Points.Add(new Point(35, 17));
+                    }
+                    else
+                    {
+                        poly.Points.Add(new Point(30, 50));
+                        poly.Points.Add(new Point(35, 43));
+                        poly.Points.Add(new Point(25, 43));
+                    }
+                }
+
+                if (poly.Points.Count != 0)
+                    SourceGrid.Children.Add(poly);
+            }
+        }
+
         public NodeType Type = NodeType.NotVisited;
 
         public Tile()
         {
             InitializeComponent();
         }
-
-        //public void SetBorder(Brush brush, int uniformThickness = 4)
-        //{
-        //    TileBorder.BorderBrush = brush;
-        //    TileBorder.BorderThickness = new Thickness(uniformThickness);
-        //    TileBorder.Margin = new Thickness(-uniformThickness / 2);
-        //}
 
         public static Tile Create(Node node)
         {
@@ -86,21 +131,6 @@ namespace PathFindingApp.View.Visualization
 
             return tile;
         }
-
-        //public static class TileBrushes
-        //{
-        //    public static Brush Default => Brushes.White;
-        //    public static Brush Visited => FromHex("ccbfb3"); // Изведанная клетка
-        //    public static Brush NotVisited => FromHex("ddd5d5"); // Не изведанная клетка
-        //    public static Brush NotAvailable => FromHex("868679"); // Недоступная клетка (например стена)
-        //    public static Brush Frontier => FromHex("6688cc"); // Граница
-        //    public static Brush Active => FromHex("d6e87d"); // Текущая активная ячейка
-        //    public static Brush NeibghorBorder => FromHex("40bf80"); // Рамка соседа
-        //    public static Brush Start => FromHex("bf4040"); // Старт
-        //    public static Brush Path => FromHex("9540bf"); // Путь
-
-        //    private static Brush FromHex(string hexCode) => new BrushConverter().ConvertFrom('#' + hexCode) as Brush;
-        //}
     }
 
     public static class TileStyles
@@ -114,7 +144,7 @@ namespace PathFindingApp.View.Visualization
         public static readonly Style Start = Create(FromHex("bf4040"));
         public static readonly Style Goal = Create(FromHex("bf3faa"));
         public static readonly Style Path = Create(FromHex("9540bf"));
-
+        //    public static Brush NeibghorBorder => FromHex("40bf80"); // Рамка соседа
 
         private static Style Create(Brush labelBrush, Brush bBrush = null, int labelMargin = 1, int bThickness = 4)
         {

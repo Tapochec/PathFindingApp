@@ -19,7 +19,13 @@ namespace PathFindingApp.Pathfinding.Simulating
 
             Visited = new List<Tuple<Position, string>>();
             foreach (Node node in visited)
-                Visited.Add(new Tuple<Position, string>(node.Pos, node.Value));
+            {
+                Position newPos = new Position(node.Pos.X, node.Pos.Y);
+                if (node.Prev != null)
+                    newPos = new Position(node.Pos, node.Prev.Pos);
+
+                Visited.Add(new Tuple<Position, string>(newPos, node.Value));
+            }
 
             Frontier = new List<Tuple<Position, string>>();
             foreach (Node node in frontier)

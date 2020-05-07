@@ -71,9 +71,9 @@ namespace PathFindingApp.View
 
         private void OnGridViewBorderSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            double newSize = Math.Min(e.NewSize.Width, e.NewSize.Height);
-            GridView.Width = newSize;
-            GridView.Height = newSize;
+            //double newSize = Math.Min(e.NewSize.Width, e.NewSize.Height);
+            //GridView.Width = newSize;
+            //GridView.Height = newSize;
         }
 
         private void FillViewClick(object sender, RoutedEventArgs e)

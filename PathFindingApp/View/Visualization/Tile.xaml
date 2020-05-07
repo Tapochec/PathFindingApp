@@ -7,10 +7,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="200" d:DesignWidth="200" Background="White">
     <Border x:Name="TileBorder">
-        <Label
+        <Grid x:Name="SourceGrid">
+            <Label
             x:Name="TileLabel"
             HorizontalContentAlignment="Center"
             VerticalContentAlignment="Center"
             FontWeight="Bold"/>
+        </Grid>
     </Border>
 </UserControl>

@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:PathFindingApp.View"
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="500"
+             Width="600" Height="600"
              
              Background="Black"
              Padding="1">
