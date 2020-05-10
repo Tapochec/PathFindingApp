@@ -32,7 +32,7 @@ namespace PathFindingApp.View.Visualization
         public bool IsFilled { get; private set; }
         public bool CanEdit { get; private set; }
 
-        public NodeGrid Data { get; set; }
+        //public NodeGrid Data { get; set; }
 
         public GridView()
         {
@@ -75,11 +75,11 @@ namespace PathFindingApp.View.Visualization
 
         private void SourceGridOnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (!CanEdit)
-            {
-                MessageBox.Show("Нельзя редактировать");
-                return;
-            }
+            //if (!CanEdit)
+            //{
+            //    MessageBox.Show("Нельзя редактировать");
+            //    return;
+            //}
 
             Point point = e.GetPosition(SourceGrid);
             double actualEdge = SourceGrid.RowDefinitions[0].ActualHeight;
@@ -94,14 +94,19 @@ namespace PathFindingApp.View.Visualization
                     clickedTile.LabelStyle = TileStyles.NotVisited;
                     clickedTile.Type = NodeType.NotVisited;
 
-                    OnWallRemoved(new WallRemovedEventArgs(x, y));
+                    OnWallRemoved(new WallRemovedEventArgs(x, y, IsFilled));
                     break;
 
-                default:
+                case NodeType.Visited:
+                case NodeType.NotVisited:
+                case NodeType.Frontier:
                     clickedTile.LabelStyle = TileStyles.NotAvailable;
                     clickedTile.Type = NodeType.NotAvailable;
 
-                    OnWallAdded(new WallAddedEventArgs(x, y));
+                    OnWallAdded(new WallAddedEventArgs(x, y, IsFilled));
+                    break;
+
+                default:
                     break;
             }
         }
@@ -116,6 +121,7 @@ namespace PathFindingApp.View.Visualization
             WallRemoved?.Invoke(SourceGrid, e);
         }
 
+        // Полность очищает сетку и заполняет её пустыми ячейками
         public void Clear()
         {
             SourceGrid.Children.Clear();
@@ -126,9 +132,9 @@ namespace PathFindingApp.View.Visualization
             CanEdit = true;
         }
 
+        // Заполняет сетку пустыми ячейками
         public void Fill()
         {
-            // Заполнение пустыми ячейками
             for (int y = 0; y < ColCount; y++)
             {
                 for (int x = 0; x < RowCount; x++)
@@ -144,24 +150,24 @@ namespace PathFindingApp.View.Visualization
             }
         }
 
-        public void Fill(NodeGrid grid)
-        {
-            Data = grid;
+        //public void Fill(NodeGrid grid)
+        //{
+        //    Data = grid;
 
-            foreach (object elem in (Content as Grid).Children)
-            {
-                Tile tile = elem as Tile;
-                int x = Grid.GetColumn(tile);
-                int y = Grid.GetRow(tile);
+        //    foreach (object elem in (Content as Grid).Children)
+        //    {
+        //        Tile tile = elem as Tile;
+        //        int x = Grid.GetColumn(tile);
+        //        int y = Grid.GetRow(tile);
 
-                Node node = grid[x, y];
-                tile.LabelText = node.Value;
-                //label.Background = CellTypeBrushes.GetBrushByType(node.Type);
-            }
+        //        Node node = grid[x, y];
+        //        tile.LabelText = node.Value;
+        //        //label.Background = CellTypeBrushes.GetBrushByType(node.Type);
+        //    }
 
-            IsFilled = true;
-            CanEdit = false;
-        }
+        //    IsFilled = true;
+        //    CanEdit = false;
+        //}
 
         public void ShowStep(SearchHistory history, int stepIndex)
         {
@@ -183,13 +189,15 @@ namespace PathFindingApp.View.Visualization
             foreach (Tuple<Position, string> tuple in currentStep.Frontier)
             {
                 Tile tile = tiles[tuple.Item1.X, tuple.Item1.Y];
+                tile.Type = NodeType.Frontier;
                 tile.LabelStyle = TileStyles.Frontier;
                 tile.LabelText = tuple.Item2;
             }
 
-            foreach (Node node in Data.Walls)
+            foreach (Position pos in history.NotAvailable)
             {
-                Tile tile = tiles[node.Pos.X, node.Pos.Y];
+                Tile tile = tiles[pos.X, pos.Y];
+                tile.Type = NodeType.NotAvailable;
                 tile.LabelStyle = TileStyles.NotAvailable;
                 tile.LabelText = "";
             }
@@ -206,7 +214,9 @@ namespace PathFindingApp.View.Visualization
             }
 
             tiles[history.Start.X, history.Start.Y].LabelStyle = TileStyles.Start;
+            tiles[history.Start.X, history.Start.Y].Type = NodeType.Start;
             tiles[history.Goal.X, history.Goal.Y].LabelStyle = TileStyles.Goal;
+            tiles[history.Goal.X, history.Goal.Y].Type = NodeType.Goal;
 
             IsFilled = true;
             CanEdit = false;

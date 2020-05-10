@@ -13,6 +13,8 @@ namespace PathFindingApp.Pathfinding
         NotAvailable,
         Frontier,
         Active,
-        Neibghor,
+        Start,
+        Goal
+        //Neibghor,
     }
 }

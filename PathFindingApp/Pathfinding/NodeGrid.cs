@@ -24,6 +24,7 @@ namespace PathFindingApp.Pathfinding
             Node node = this[x, y];
 
             node.Type = NodeType.NotAvailable;
+            node.Value = "";
             Walls.Add(node);
         }
 

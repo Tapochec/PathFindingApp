@@ -38,12 +38,15 @@ namespace PathFindingApp.View
             // Data
             _nodeGrid = NodeGrid.CreateNodeGrid();
             _start = _nodeGrid[3, 3];
+            _start.Type = NodeType.Start;
             _goal = _nodeGrid[8, 7];
-            _history = WidthSearch.FillGridWithHistory(_nodeGrid, _start, _goal);
+            _goal.Type = NodeType.Goal;
+            UpdateSearch();
+            //_history = WidthSearch.FillGridWithHistory(_nodeGrid, _start, _goal);
 
             // View
             GridView.InitGrid();
-            GridView.Data = _nodeGrid;
+            //GridView.Data = _nodeGrid;
             //GridView.ShowStep(_stepsHistory.Last());
             //_currentStep = _stepsHistory.Count - 1;
 
@@ -61,12 +64,24 @@ namespace PathFindingApp.View
         {
             _nodeGrid.AddWall(e.X, e.Y);
             UpdateSearch();
+
+            if (e.NeedUpdate)
+            {
+                _currentStep = _history.Steps.Count - 1;
+                GridView.ShowStep(_history, _currentStep);
+            }
         }
 
         private void GridView_WallRemoved(object sender, WallRemovedEventArgs e)
         {
             _nodeGrid.RemoveWall(e.X, e.Y);
             UpdateSearch();
+
+            if (e.NeedUpdate)
+            {
+                _currentStep = _history.Steps.Count - 1;
+                GridView.ShowStep(_history, _currentStep);
+            }
         }
 
         private void OnGridViewBorderSizeChanged(object sender, SizeChangedEventArgs e)
@@ -79,8 +94,8 @@ namespace PathFindingApp.View
         private void FillViewClick(object sender, RoutedEventArgs e)
         {
             //GridView.Fill(_nodeGrid);
-            GridView.ShowStep(_history, _history.Steps.Count - 1);
             _currentStep = _history.Steps.Count - 1;
+            GridView.ShowStep(_history, _currentStep);
         }
 
         private void StepForwardClick(object sender, RoutedEventArgs e)
