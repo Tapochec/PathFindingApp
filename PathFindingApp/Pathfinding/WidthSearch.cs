@@ -85,6 +85,9 @@ namespace PathFindingApp.Pathfinding
                 steps.Add(step);
             }
 
+            StepHistoryItem lastStep = new StepHistoryItem(goal, visited, frontier);
+            steps.Add(lastStep);
+
             List<Node> path = new List<Node> { goal };
             while (path.Last() != start)
             {

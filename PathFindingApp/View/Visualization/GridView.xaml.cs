@@ -41,7 +41,7 @@ namespace PathFindingApp.View.Visualization
 
         public void InitGrid(int rowCount = 10, int colCount = 10)
         {
-            SetXYCount(rowCount, colCount);
+            SetRowColCount(rowCount, colCount);
             Fill();
 
             CanEdit = true;
@@ -49,24 +49,24 @@ namespace PathFindingApp.View.Visualization
 
         public void SetXYCount()
         {
-            SetXYCount(RowCount, ColCount);
+            SetRowColCount(RowCount, ColCount);
         }
 
         // Устанавливает количество строк и столбцов в Grid
-        public void SetXYCount(int xCount, int yCount)
+        public void SetRowColCount(int rowCount, int colCount)
         {
-            RowCount = xCount;
-            ColCount = yCount;
+            RowCount = rowCount;
+            ColCount = colCount;
 
             SourceGrid.RowDefinitions.Clear();
             SourceGrid.ColumnDefinitions.Clear();
 
-            for (int x = 0; x < xCount; x++)
+            for (int x = 0; x < rowCount; x++)
             {
                 var col = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
                 SourceGrid.ColumnDefinitions.Add(col);
             }
-            for (int y = 0; y < yCount; y++)
+            for (int y = 0; y < colCount; y++)
             {
                 var row = new RowDefinition { Height = new GridLength(1, GridUnitType.Star) };
                 SourceGrid.RowDefinitions.Add(row);
@@ -200,9 +200,8 @@ namespace PathFindingApp.View.Visualization
                 tile.Type = NodeType.NotAvailable;
                 tile.LabelStyle = TileStyles.NotAvailable;
                 tile.LabelText = "";
+                Panel.SetZIndex(tile, 1);
             }
-
-            tiles[currentStep.Active.Item1.X, currentStep.Active.Item1.Y].LabelStyle = TileStyles.Active;
 
             if ((history.Steps.Count - 1) == stepIndex)
             {
@@ -213,8 +212,11 @@ namespace PathFindingApp.View.Visualization
                 }
             }
 
+            tiles[currentStep.Active.Item1.X, currentStep.Active.Item1.Y].LabelStyle = TileStyles.Active;
+
             tiles[history.Start.X, history.Start.Y].LabelStyle = TileStyles.Start;
             tiles[history.Start.X, history.Start.Y].Type = NodeType.Start;
+
             tiles[history.Goal.X, history.Goal.Y].LabelStyle = TileStyles.Goal;
             tiles[history.Goal.X, history.Goal.Y].Type = NodeType.Goal;
 

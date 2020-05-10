@@ -138,7 +138,7 @@ namespace PathFindingApp.View.Visualization
         public static readonly Style Default = Create(Brushes.White);
         public static readonly Style Visited = Create(FromHex("ccbfb3"));
         public static readonly Style NotVisited = Create(FromHex("ddd5d5"));
-        public static readonly Style NotAvailable = Create(FromHex("868679"), null, 0);
+        public static readonly Style NotAvailable = Create(FromHex("868679"), null, -1);
         public static readonly Style Frontier = Create(FromHex("6688cc"));
         public static readonly Style Active = Create(FromHex("d6e87d"));
         public static readonly Style Start = Create(FromHex("bf4040"));

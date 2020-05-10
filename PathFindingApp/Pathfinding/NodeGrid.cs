@@ -51,10 +51,22 @@ namespace PathFindingApp.Pathfinding
             int y = node.Pos.Y;
             List<Node> neighbors = new List<Node>();
 
-            neighbors.Add(this[x - 1, y]);
-            neighbors.Add(this[x, y - 1]);
-            neighbors.Add(this[x + 1, y]);
-            neighbors.Add(this[x, y + 1]);
+            // Смена хода часовой стрелки для более гладкого результата
+            if ((x + y) % 2 == 0)
+            {
+                neighbors.Add(this[x, y - 1]); // up
+                neighbors.Add(this[x - 1, y]); // left
+                neighbors.Add(this[x, y + 1]); // down
+                neighbors.Add(this[x + 1, y]); // right
+            }
+            else
+            {
+                neighbors.Add(this[x + 1, y]); // right
+                neighbors.Add(this[x, y + 1]); // down
+                neighbors.Add(this[x - 1, y]); // left
+                neighbors.Add(this[x, y - 1]); // up
+            }
+            
             neighbors.RemoveAll(n => n == null);
             neighbors.RemoveAll(n => n.Type == NodeType.NotAvailable); // Исключаем стены
 
