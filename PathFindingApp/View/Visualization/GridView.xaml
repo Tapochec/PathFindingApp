@@ -10,7 +10,7 @@
              
              Background="Black"
              Padding="1">
-    <Grid x:Name="SourceGrid" MouseDown="SourceGridOnMouseDown" Background="Transparent">
+    <Grid x:Name="SourceGrid" MouseDown="SourceGridMouseDown" Background="Transparent">
         
     </Grid>
 </UserControl>

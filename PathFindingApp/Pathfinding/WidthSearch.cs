@@ -58,14 +58,18 @@ namespace PathFindingApp.Pathfinding
             visited.Add(start);
 
             int counter = 0;
+            bool success = false;
 
             while (frontier.Count != 0)
             {
                 Node current = frontier.Dequeue();
                 current.Value = counter.ToString();
 
-                if (current.Pos == goal.Pos)
+                if (current == goal)
+                {
+                    success = true;
                     break;
+                }
 
                 foreach (Node next in grid.GetNeighbors(current))
                 {
@@ -88,10 +92,12 @@ namespace PathFindingApp.Pathfinding
             StepHistoryItem lastStep = new StepHistoryItem(goal, visited, frontier);
             steps.Add(lastStep);
 
-            List<Node> path = new List<Node> { goal };
-            while (path.Last() != start)
+            List<Node> path = null;
+            if (success)
             {
-                path.Add(path.Last().Prev);
+                path = new List<Node> { goal };
+                while (path.Last() != start)
+                    path.Add(path.Last().Prev);
             }
 
             SearchHistory history = new SearchHistory(start, goal, grid.Walls, steps, path);

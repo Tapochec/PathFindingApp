@@ -30,9 +30,11 @@ namespace PathFindingApp.View.Visualization
 
         public int RowCount { get; private set; }
         public int ColCount { get; private set; }
-
         public bool IsFilled { get; private set; }
+
+
         private bool _isTileDragging;
+        private Tile _clickedTile;
 
         public GridView()
         {
@@ -43,11 +45,6 @@ namespace PathFindingApp.View.Visualization
         {
             SetRowColCount(rowCount, colCount);
             Fill();
-        }
-
-        public void SetXYCount()
-        {
-            SetRowColCount(RowCount, ColCount);
         }
 
         // Устанавливает количество строк и столбцов в Grid
@@ -71,19 +68,12 @@ namespace PathFindingApp.View.Visualization
             }
         }
 
-        private void SourceGridOnMouseDown(object sender, MouseButtonEventArgs e)
+        private void SourceGridMouseDown(object sender, MouseButtonEventArgs e)
         {
-            //if (!CanEdit)
-            //{
-            //    MessageBox.Show("Нельзя редактировать");
-            //    return;
-            //}
-
             Point point = e.GetPosition(SourceGrid);
             double actualEdge = SourceGrid.RowDefinitions[0].ActualHeight;
             int x = Convert.ToInt32(Math.Floor(point.X / actualEdge));
             int y = Convert.ToInt32(Math.Floor(point.Y / actualEdge));
-
             Tile clickedTile = SourceGrid.Children[y * 10 + x] as Tile;
             
             switch (clickedTile.Type)
@@ -104,13 +94,50 @@ namespace PathFindingApp.View.Visualization
                     OnWallAdded(new WallAddedEventArgs(x, y));
                     break;
 
-                //case NodeType.Start:
-                //    clickedTile.TileLabel.Opacity = 0.5;
-                //    break;
+                case NodeType.Start:
+                case NodeType.Goal:
+                    clickedTile.TileLabel.Opacity = 0.5;
+
+                    _clickedTile = clickedTile;
+                    SourceGrid.MouseUp += SourceGridMouseUp;
+                    _isTileDragging = true;
+                    break;
 
                 default:
                     break;
             }
+        }
+
+        private void SourceGridMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            Point point = e.GetPosition(SourceGrid);
+            double actualEdge = SourceGrid.RowDefinitions[0].ActualHeight;
+            int x = Convert.ToInt32(Math.Floor(point.X / actualEdge));
+            int y = Convert.ToInt32(Math.Floor(point.Y / actualEdge));
+            Tile newTile = SourceGrid.Children[y * 10 + x] as Tile;
+
+            if ((_clickedTile == newTile) || (newTile.Type == NodeType.NotAvailable))
+            {
+                _clickedTile.TileLabel.Opacity = 1;
+                SourceGrid.MouseUp -= SourceGridMouseUp;
+                _isTileDragging = false;
+                _clickedTile = null;
+                return;
+            }
+
+            switch (_clickedTile.Type)
+            {
+                case NodeType.Start:
+                    OnStartChanged(new StartChangedEventArgs(x, y));
+                    break;
+
+                case NodeType.Goal:
+                    OnGoalChanged(new GoalChangedEventArgs(x, y));
+                    break;
+            }
+
+            _isTileDragging = false;
+            SourceGrid.MouseUp -= SourceGridMouseUp;
         }
 
         private void OnWallAdded(WallAddedEventArgs e)
@@ -139,7 +166,6 @@ namespace PathFindingApp.View.Visualization
             SourceGrid.Children.Clear();
             Fill();
 
-            //Data = null;
             IsFilled = false;
         }
 
@@ -160,25 +186,6 @@ namespace PathFindingApp.View.Visualization
                 }
             }
         }
-
-        //public void Fill(NodeGrid grid)
-        //{
-        //    Data = grid;
-
-        //    foreach (object elem in (Content as Grid).Children)
-        //    {
-        //        Tile tile = elem as Tile;
-        //        int x = Grid.GetColumn(tile);
-        //        int y = Grid.GetRow(tile);
-
-        //        Node node = grid[x, y];
-        //        tile.LabelText = node.Value;
-        //        //label.Background = CellTypeBrushes.GetBrushByType(node.Type);
-        //    }
-
-        //    IsFilled = true;
-        //    CanEdit = false;
-        //}
 
         public void ShowStep(SearchHistory history, int stepIndex)
         {
@@ -216,11 +223,12 @@ namespace PathFindingApp.View.Visualization
 
             if ((history.Steps.Count - 1) == stepIndex)
             {
-                foreach (Position pos in history.Path)
-                {
-                    Tile tile = tiles[pos.X, pos.Y];
-                    tile.LabelStyle = TileStyles.Path;
-                }
+                if (history.Path != null)
+                    foreach (Position pos in history.Path)
+                    {
+                        Tile tile = tiles[pos.X, pos.Y];
+                        tile.LabelStyle = TileStyles.Path;
+                    }
             }
 
             tiles[currentStep.Active.Item1.X, currentStep.Active.Item1.Y].LabelStyle = TileStyles.Active;

@@ -33,8 +33,6 @@ namespace PathFindingApp.View
         {
             InitializeComponent();
 
-            //GridViewBorder.SizeChanged += OnGridViewBorderSizeChanged;
-
             // Data
             _nodeGrid = NodeGrid.CreateNodeGrid();
             _start = _nodeGrid[3, 3];
@@ -42,7 +40,6 @@ namespace PathFindingApp.View
             _goal = _nodeGrid[8, 7];
             _goal.Type = NodeType.Goal;
             UpdateSearch();
-            //_history = WidthSearch.FillGridWithHistory(_nodeGrid, _start, _goal);
 
             // View
             GridView.InitGrid();
@@ -104,11 +101,11 @@ namespace PathFindingApp.View
                 ShowLastStep();
         }
 
+        #region Mouse input
+
         private void FillViewClick(object sender, RoutedEventArgs e)
         {
-            //GridView.Fill(_nodeGrid);
-            _currentStep = _history.Steps.Count - 1;
-            GridView.ShowStep(_history, _currentStep);
+            ShowLastStep();
         }
 
         private void StepForwardClick(object sender, RoutedEventArgs e)
@@ -138,5 +135,7 @@ namespace PathFindingApp.View
             GridView.Clear();
             _currentStep = -1;
         }
+
+        #endregion Mouse input
     }
 }
