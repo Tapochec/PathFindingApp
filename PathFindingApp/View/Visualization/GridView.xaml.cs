@@ -32,8 +32,6 @@ namespace PathFindingApp.View.Visualization
         public int ColCount { get; private set; }
         public bool IsFilled { get; private set; }
 
-
-        private bool _isTileDragging;
         private Tile _clickedTile;
 
         public GridView()
@@ -100,7 +98,6 @@ namespace PathFindingApp.View.Visualization
 
                     _clickedTile = clickedTile;
                     SourceGrid.MouseUp += SourceGridMouseUp;
-                    _isTileDragging = true;
                     break;
 
                 default:
@@ -120,7 +117,6 @@ namespace PathFindingApp.View.Visualization
             {
                 _clickedTile.TileLabel.Opacity = 1;
                 SourceGrid.MouseUp -= SourceGridMouseUp;
-                _isTileDragging = false;
                 _clickedTile = null;
                 return;
             }
@@ -136,7 +132,6 @@ namespace PathFindingApp.View.Visualization
                     break;
             }
 
-            _isTileDragging = false;
             SourceGrid.MouseUp -= SourceGridMouseUp;
         }
 

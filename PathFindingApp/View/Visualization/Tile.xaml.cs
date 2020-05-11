@@ -43,41 +43,35 @@ namespace PathFindingApp.View.Visualization
 
                 _arrowDir = value;
 
-                if (SourceGrid.Children.Count == 2)
-                    SourceGrid.Children.RemoveAt(1);
+                // Удаление предыдущей стрелки
+                Polygon arrow = SourceGrid.Children.OfType<Polygon>().FirstOrDefault();
+                if (arrow != null)
+                    SourceGrid.Children.Remove(arrow);
 
                 Polygon poly = new Polygon { Fill = Brushes.Black, Name = "Arrow" };
+                int x = (int)value.X;
+                int y = (int)value.Y;
+
                 // Лево / право
-                if (value.X != 0)
+                if (y == 0)
                 {
-                    if (value.X == -1)
-                    {
-                        poly.Points.Add(new Point(10, 30));
-                        poly.Points.Add(new Point(17, 25));
-                        poly.Points.Add(new Point(17, 35));
-                    }
-                    else
-                    {
-                        poly.Points.Add(new Point(50, 30));
-                        poly.Points.Add(new Point(43, 35));
-                        poly.Points.Add(new Point(43, 25));
-                    }
+                    poly.Points.Add(new Point(30 + 20 * x, 30));
+                    poly.Points.Add(new Point(30 + 13 * x, 25));
+                    poly.Points.Add(new Point(30 + 13 * x, 35));
                 }
                 // Верх / низ
+                else if (x == 0)
+                {
+                    poly.Points.Add(new Point(30, 30 + 20 * y));
+                    poly.Points.Add(new Point(25, 30 + 13 * y));
+                    poly.Points.Add(new Point(35, 30 + 13 * y));
+                }
+                // Диагонали
                 else
                 {
-                    if (value.Y == -1)
-                    {
-                        poly.Points.Add(new Point(30, 10));
-                        poly.Points.Add(new Point(25, 17));
-                        poly.Points.Add(new Point(35, 17));
-                    }
-                    else
-                    {
-                        poly.Points.Add(new Point(30, 50));
-                        poly.Points.Add(new Point(35, 43));
-                        poly.Points.Add(new Point(25, 43));
-                    }
+                    poly.Points.Add(new Point(30 + 20 * x, 30 + 20 * y));
+                    poly.Points.Add(new Point(30 + 12 * x, 30 + 20 * y));
+                    poly.Points.Add(new Point(30 + 20 * x, 30 + 12 * y));
                 }
 
                 if (poly.Points.Count != 0)

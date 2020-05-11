@@ -82,8 +82,10 @@ namespace PathFindingApp.View
         private void GridView_StartChanged(object sender, StartChangedEventArgs e)
         {
             _start.Type = NodeType.NotVisited;
+
             _start = _nodeGrid[e.X, e.Y];
             _start.Type = NodeType.Start;
+            _start.Prev = null;
             UpdateSearch();
 
             if (GridView.IsFilled)
@@ -93,8 +95,10 @@ namespace PathFindingApp.View
         private void GridView_GoalChanged(object sender, GoalChangedEventArgs e)
         {
             _goal.Type = NodeType.NotVisited;
+
             _goal = _nodeGrid[e.X, e.Y];
             _goal.Type = NodeType.Goal;
+            _goal.Prev = null;
             UpdateSearch();
 
             if (GridView.IsFilled)

@@ -16,6 +16,8 @@ namespace PathFindingApp.Pathfinding
 
         public readonly bool HasPrev;
 
+        public Position NaN => new Position(-1, -1);
+
         public Position(int x, int y)
         {
             X = x;
