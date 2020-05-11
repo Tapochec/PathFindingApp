@@ -25,14 +25,14 @@ namespace PathFindingApp.View.Visualization
     {
         public event EventHandler<WallAddedEventArgs> WallAdded;
         public event EventHandler<WallRemovedEventArgs> WallRemoved;
+        public event EventHandler<StartChangedEventArgs> StartChanged;
+        public event EventHandler<GoalChangedEventArgs> GoalChanged;
 
         public int RowCount { get; private set; }
         public int ColCount { get; private set; }
 
         public bool IsFilled { get; private set; }
-        public bool CanEdit { get; private set; }
-
-        //public NodeGrid Data { get; set; }
+        private bool _isTileDragging;
 
         public GridView()
         {
@@ -43,8 +43,6 @@ namespace PathFindingApp.View.Visualization
         {
             SetRowColCount(rowCount, colCount);
             Fill();
-
-            CanEdit = true;
         }
 
         public void SetXYCount()
@@ -94,7 +92,7 @@ namespace PathFindingApp.View.Visualization
                     clickedTile.LabelStyle = TileStyles.NotVisited;
                     clickedTile.Type = NodeType.NotVisited;
 
-                    OnWallRemoved(new WallRemovedEventArgs(x, y, IsFilled));
+                    OnWallRemoved(new WallRemovedEventArgs(x, y));
                     break;
 
                 case NodeType.Visited:
@@ -103,8 +101,12 @@ namespace PathFindingApp.View.Visualization
                     clickedTile.LabelStyle = TileStyles.NotAvailable;
                     clickedTile.Type = NodeType.NotAvailable;
 
-                    OnWallAdded(new WallAddedEventArgs(x, y, IsFilled));
+                    OnWallAdded(new WallAddedEventArgs(x, y));
                     break;
+
+                //case NodeType.Start:
+                //    clickedTile.TileLabel.Opacity = 0.5;
+                //    break;
 
                 default:
                     break;
@@ -121,6 +123,16 @@ namespace PathFindingApp.View.Visualization
             WallRemoved?.Invoke(SourceGrid, e);
         }
 
+        private void OnStartChanged(StartChangedEventArgs e)
+        {
+            StartChanged?.Invoke(SourceGrid, e);
+        }
+
+        private void OnGoalChanged(GoalChangedEventArgs e)
+        {
+            GoalChanged?.Invoke(SourceGrid, e);
+        }
+
         // Полность очищает сетку и заполняет её пустыми ячейками
         public void Clear()
         {
@@ -129,7 +141,6 @@ namespace PathFindingApp.View.Visualization
 
             //Data = null;
             IsFilled = false;
-            CanEdit = true;
         }
 
         // Заполняет сетку пустыми ячейками
@@ -221,7 +232,6 @@ namespace PathFindingApp.View.Visualization
             tiles[history.Goal.X, history.Goal.Y].Type = NodeType.Goal;
 
             IsFilled = true;
-            CanEdit = false;
         }
 
         private Tile[,] GetTiles()

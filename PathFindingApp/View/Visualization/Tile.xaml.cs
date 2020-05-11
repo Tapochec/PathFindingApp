@@ -90,6 +90,8 @@ namespace PathFindingApp.View.Visualization
         public Tile()
         {
             InitializeComponent();
+
+            Cursor = Cursors.Hand;
         }
 
         public static Tile Create(Node node)

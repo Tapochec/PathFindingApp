@@ -51,7 +51,7 @@ namespace PathFindingApp.Pathfinding
             int y = node.Pos.Y;
             List<Node> neighbors = new List<Node>();
 
-            // Смена хода часовой стрелки для более гладкого результата
+            // Смена хода часовой стрелки в зависимости от чётности стрелки
             if ((x + y) % 2 == 0)
             {
                 neighbors.Add(this[x, y - 1]); // up

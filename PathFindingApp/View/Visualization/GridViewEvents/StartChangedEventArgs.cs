@@ -2,15 +2,15 @@
 
 namespace PathFindingApp.View.Visualization.GridViewEvents
 {
-    public class WallRemovedEventArgs : EventArgs
+    public class StartChangedEventArgs : EventArgs
     {
         public readonly int X;
         public readonly int Y;
 
-        public WallRemovedEventArgs(int x, int y)
+        public StartChangedEventArgs(int newX, int newY)
         {
-            X = x;
-            Y = y;
+            X = newX;
+            Y = newY;
         }
     }
 }

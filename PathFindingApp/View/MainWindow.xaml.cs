@@ -33,7 +33,7 @@ namespace PathFindingApp.View
         {
             InitializeComponent();
 
-            GridViewBorder.SizeChanged += OnGridViewBorderSizeChanged;
+            //GridViewBorder.SizeChanged += OnGridViewBorderSizeChanged;
 
             // Data
             _nodeGrid = NodeGrid.CreateNodeGrid();
@@ -46,13 +46,11 @@ namespace PathFindingApp.View
 
             // View
             GridView.InitGrid();
-            //GridView.Data = _nodeGrid;
-            //GridView.ShowStep(_stepsHistory.Last());
-            //_currentStep = _stepsHistory.Count - 1;
-
 
             GridView.WallAdded += GridView_WallAdded;
             GridView.WallRemoved += GridView_WallRemoved;
+            GridView.StartChanged += GridView_StartChanged;
+            GridView.GoalChanged += GridView_GoalChanged;
         }
 
         private void UpdateSearch()
@@ -60,16 +58,19 @@ namespace PathFindingApp.View
             _history = WidthSearch.FillGridWithHistory(_nodeGrid, _start, _goal);
         }
 
+        private void ShowLastStep()
+        {
+            _currentStep = _history.Steps.Count - 1;
+            GridView.ShowStep(_history, _currentStep);
+        }
+
         private void GridView_WallAdded(object sender, WallAddedEventArgs e)
         {
             _nodeGrid.AddWall(e.X, e.Y);
             UpdateSearch();
 
-            if (e.NeedUpdate)
-            {
-                _currentStep = _history.Steps.Count - 1;
-                GridView.ShowStep(_history, _currentStep);
-            }
+            if (GridView.IsFilled)
+                ShowLastStep();
         }
 
         private void GridView_WallRemoved(object sender, WallRemovedEventArgs e)
@@ -77,18 +78,30 @@ namespace PathFindingApp.View
             _nodeGrid.RemoveWall(e.X, e.Y);
             UpdateSearch();
 
-            if (e.NeedUpdate)
-            {
-                _currentStep = _history.Steps.Count - 1;
-                GridView.ShowStep(_history, _currentStep);
-            }
+            if (GridView.IsFilled)
+                ShowLastStep();
         }
 
-        private void OnGridViewBorderSizeChanged(object sender, SizeChangedEventArgs e)
+        private void GridView_StartChanged(object sender, StartChangedEventArgs e)
         {
-            //double newSize = Math.Min(e.NewSize.Width, e.NewSize.Height);
-            //GridView.Width = newSize;
-            //GridView.Height = newSize;
+            _start.Type = NodeType.NotVisited;
+            _start = _nodeGrid[e.X, e.Y];
+            _start.Type = NodeType.Start;
+            UpdateSearch();
+
+            if (GridView.IsFilled)
+                ShowLastStep();
+        }
+
+        private void GridView_GoalChanged(object sender, GoalChangedEventArgs e)
+        {
+            _goal.Type = NodeType.NotVisited;
+            _goal = _nodeGrid[e.X, e.Y];
+            _goal.Type = NodeType.Goal;
+            UpdateSearch();
+
+            if (GridView.IsFilled)
+                ShowLastStep();
         }
 
         private void FillViewClick(object sender, RoutedEventArgs e)

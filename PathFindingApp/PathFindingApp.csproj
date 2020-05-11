@@ -56,6 +56,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Pathfinding\Simulating\SearchHistory.cs" />
+    <Compile Include="View\Visualization\GridViewEvents\GoalChangedEventArgs.cs" />
+    <Compile Include="View\Visualization\GridViewEvents\StartChangedEventArgs.cs" />
     <Compile Include="View\Visualization\GridViewEvents\WallAddedEventArgs.cs" />
     <Compile Include="View\Visualization\GridViewEvents\WallRemovedEventArgs.cs" />
     <Compile Include="View\Visualization\Tile.xaml.cs">

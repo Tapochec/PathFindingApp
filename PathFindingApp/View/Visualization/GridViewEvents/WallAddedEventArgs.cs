@@ -6,13 +6,11 @@ namespace PathFindingApp.View.Visualization.GridViewEvents
     {
         public readonly int X;
         public readonly int Y;
-        public readonly bool NeedUpdate;
 
-        public WallAddedEventArgs(int x, int y, bool needUpdate = false)
+        public WallAddedEventArgs(int x, int y)
         {
             X = x;
             Y = y;
-            NeedUpdate = needUpdate;
         }
     }
 }
