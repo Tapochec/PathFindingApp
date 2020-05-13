@@ -61,22 +61,29 @@ namespace PathFindingApp.View
             GridView.ShowStep(_history, _currentStep);
         }
 
+        private void UpdateCurrentStepView()
+        {
+            if (GridView.IsFilled)
+            {
+                if (_currentStep < _history.Steps.Count)
+                    GridView.ShowStep(_history, _currentStep);
+                else
+                    ShowLastStep();
+            }
+        }
+
         private void GridView_WallAdded(object sender, WallAddedEventArgs e)
         {
             _nodeGrid.AddWall(e.X, e.Y);
             UpdateSearch();
-
-            if (GridView.IsFilled)
-                ShowLastStep();
+            UpdateCurrentStepView();
         }
 
         private void GridView_WallRemoved(object sender, WallRemovedEventArgs e)
         {
             _nodeGrid.RemoveWall(e.X, e.Y);
             UpdateSearch();
-
-            if (GridView.IsFilled)
-                ShowLastStep();
+            UpdateCurrentStepView();
         }
 
         private void GridView_StartChanged(object sender, StartChangedEventArgs e)
@@ -87,9 +94,7 @@ namespace PathFindingApp.View
             _start.Type = NodeType.Start;
             _start.Prev = null;
             UpdateSearch();
-
-            if (GridView.IsFilled)
-                ShowLastStep();
+            UpdateCurrentStepView();
         }
 
         private void GridView_GoalChanged(object sender, GoalChangedEventArgs e)
@@ -100,9 +105,7 @@ namespace PathFindingApp.View
             _goal.Type = NodeType.Goal;
             _goal.Prev = null;
             UpdateSearch();
-
-            if (GridView.IsFilled)
-                ShowLastStep();
+            UpdateCurrentStepView();
         }
 
         #region Mouse input
@@ -134,7 +137,7 @@ namespace PathFindingApp.View
 
         private void ClearViewClick(object sender, RoutedEventArgs e)
         {
-            _nodeGrid.Clear();
+            //_nodeGrid.Clear();
             UpdateSearch();
             GridView.Clear();
             _currentStep = -1;
