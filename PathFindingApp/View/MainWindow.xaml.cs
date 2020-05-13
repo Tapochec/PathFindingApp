@@ -39,10 +39,12 @@ namespace PathFindingApp.View
             _start.Type = NodeType.Start;
             _goal = _nodeGrid[8, 7];
             _goal.Type = NodeType.Goal;
+            _nodeGrid.AddWall(8, 1);
             UpdateSearch();
 
             // View
-            GridView.InitGrid();
+            GridView.Init(_history);
+            GridView.ShowStep(-1);
 
             GridView.WallAdded += GridView_WallAdded;
             GridView.WallRemoved += GridView_WallRemoved;
@@ -58,15 +60,15 @@ namespace PathFindingApp.View
         private void ShowLastStep()
         {
             _currentStep = _history.Steps.Count - 1;
-            GridView.ShowStep(_history, _currentStep);
+            GridView.ShowStep(_currentStep);
         }
 
         private void UpdateCurrentStepView()
         {
-            if (GridView.IsFilled)
+            if (GridView.IsStepShown)
             {
                 if (_currentStep < _history.Steps.Count)
-                    GridView.ShowStep(_history, _currentStep);
+                    GridView.ShowStep(_currentStep);
                 else
                     ShowLastStep();
             }
@@ -76,6 +78,7 @@ namespace PathFindingApp.View
         {
             _nodeGrid.AddWall(e.X, e.Y);
             UpdateSearch();
+            GridView.History = _history;
             UpdateCurrentStepView();
         }
 
@@ -83,6 +86,7 @@ namespace PathFindingApp.View
         {
             _nodeGrid.RemoveWall(e.X, e.Y);
             UpdateSearch();
+            GridView.History = _history;
             UpdateCurrentStepView();
         }
 
@@ -94,6 +98,7 @@ namespace PathFindingApp.View
             _start.Type = NodeType.Start;
             _start.Prev = null;
             UpdateSearch();
+            GridView.History = _history;
             UpdateCurrentStepView();
         }
 
@@ -105,6 +110,7 @@ namespace PathFindingApp.View
             _goal.Type = NodeType.Goal;
             _goal.Prev = null;
             UpdateSearch();
+            GridView.History = _history;
             UpdateCurrentStepView();
         }
 
@@ -122,7 +128,7 @@ namespace PathFindingApp.View
 
             _currentStep++;
 
-            GridView.ShowStep(_history, _currentStep);
+            GridView.ShowStep(_currentStep);
         }
 
         private void StepBackClick(object sender, RoutedEventArgs e)
@@ -132,15 +138,14 @@ namespace PathFindingApp.View
 
             _currentStep--;
 
-            GridView.ShowStep(_history, _currentStep);
+            GridView.ShowStep(_currentStep);
         }
 
         private void ClearViewClick(object sender, RoutedEventArgs e)
         {
-            //_nodeGrid.Clear();
-            UpdateSearch();
-            GridView.Clear();
+            //GridView.Clear();
             _currentStep = -1;
+            GridView.ShowStep(-1);
         }
 
         #endregion Mouse input
