@@ -1,5 +1,7 @@
 ﻿using PathFindingApp.Pathfinding;
 using PathFindingApp.Pathfinding.Simulating;
+using PathFindingApp.Properties;
+using PathFindingApp.View.Settings;
 using PathFindingApp.View.Visualization.GridViewEvents;
 using System;
 using System.Collections.Generic;
@@ -40,7 +42,7 @@ namespace PathFindingApp.View
             _goal = _nodeGrid[8, 7];
             _goal.Type = NodeType.Goal;
             _nodeGrid.AddWall(8, 1);
-            UpdateSearch();
+            _history = _history = WidthSearch.FillGridWithHistory(_nodeGrid, _start, _goal);
 
             // View
             GridView.Init(_history);
@@ -55,6 +57,7 @@ namespace PathFindingApp.View
         private void UpdateSearch()
         {
             _history = WidthSearch.FillGridWithHistory(_nodeGrid, _start, _goal);
+            GridView.History = _history;
         }
 
         private void ShowLastStep()
@@ -78,7 +81,6 @@ namespace PathFindingApp.View
         {
             _nodeGrid.AddWall(e.X, e.Y);
             UpdateSearch();
-            GridView.History = _history;
             UpdateCurrentStepView();
         }
 
@@ -86,7 +88,6 @@ namespace PathFindingApp.View
         {
             _nodeGrid.RemoveWall(e.X, e.Y);
             UpdateSearch();
-            GridView.History = _history;
             UpdateCurrentStepView();
         }
 
@@ -98,7 +99,6 @@ namespace PathFindingApp.View
             _start.Type = NodeType.Start;
             _start.Prev = null;
             UpdateSearch();
-            GridView.History = _history;
             UpdateCurrentStepView();
         }
 
@@ -110,13 +110,25 @@ namespace PathFindingApp.View
             _goal.Type = NodeType.Goal;
             _goal.Prev = null;
             UpdateSearch();
-            GridView.History = _history;
             UpdateCurrentStepView();
         }
 
-        #region Mouse input
+        #region User input
 
-        private void FillViewClick(object sender, RoutedEventArgs e)
+        private void MenuItem_Settings_Click(object sender, RoutedEventArgs e)
+        {
+            SettingsWindow window = new SettingsWindow();
+            window.ShowDialog();
+
+            if (window.IsAnySettingChanged)
+            {
+                UpdateSearch();
+                _currentStep = -1;
+                GridView.ShowStep(_currentStep);
+            }
+        }
+
+        private void Button_ShowLastStep_Click(object sender, RoutedEventArgs e)
         {
             ShowLastStep();
         }
@@ -131,7 +143,7 @@ namespace PathFindingApp.View
             GridView.ShowStep(_currentStep);
         }
 
-        private void StepBackClick(object sender, RoutedEventArgs e)
+        private void Button_StepBack_Click(object sender, RoutedEventArgs e)
         {
             if (_currentStep <= 0)
                 return;
@@ -148,6 +160,6 @@ namespace PathFindingApp.View
             GridView.ShowStep(-1);
         }
 
-        #endregion Mouse input
+        #endregion User input
     }
 }

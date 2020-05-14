@@ -38,6 +38,8 @@ namespace PathFindingApp.View.Visualization
         public GridView()
         {
             InitializeComponent();
+
+            MouseLeave += GridView_MouseLeave;
         }
 
         public void Init(SearchHistory history, int rowCount = 10, int colCount = 10)
@@ -47,7 +49,7 @@ namespace PathFindingApp.View.Visualization
             Fill();
         }
 
-        // Устанавливает количество строк и столбцов в Grid
+        // Устанавливает количество строк и столбцов в SourceGrid
         public void SetRowColCount(int rowCount, int colCount)
         {
             RowCount = rowCount;
@@ -68,100 +70,12 @@ namespace PathFindingApp.View.Visualization
             }
         }
 
-        private void SourceGridMouseDown(object sender, MouseButtonEventArgs e)
+        private void DeselectTile()
         {
-            Point point = e.GetPosition(SourceGrid);
-            double actualEdge = SourceGrid.RowDefinitions[0].ActualHeight;
-            int x = Convert.ToInt32(Math.Floor(point.X / actualEdge));
-            int y = Convert.ToInt32(Math.Floor(point.Y / actualEdge));
-            Tile clickedTile = SourceGrid.Children[y * 10 + x] as Tile;
-            
-            switch (clickedTile.Type)
-            {
-                case NodeType.NotAvailable:
-                    //clickedTile.LabelStyle = TileStyles.NotVisited;
-                    //clickedTile.Type = NodeType.NotVisited;
-
-                    OnWallRemoved(new WallRemovedEventArgs(x, y));
-                    break;
-
-                case NodeType.Visited:
-                case NodeType.NotVisited:
-                case NodeType.Frontier:
-                    //clickedTile.LabelStyle = TileStyles.NotAvailable;
-                    //clickedTile.Type = NodeType.NotAvailable;
-                    //Panel.SetZIndex(clickedTile, 1);
-
-                    OnWallAdded(new WallAddedEventArgs(x, y));
-                    break;
-
-                case NodeType.Start:
-                case NodeType.Goal:
-                    clickedTile.TileLabel.Opacity = 0.5;
-
-                    _clickedTile = clickedTile;
-                    SourceGrid.MouseUp += SourceGridMouseUp;
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
-        private void SourceGridMouseUp(object sender, MouseButtonEventArgs e)
-        {
-            Point point = e.GetPosition(SourceGrid);
-            double actualEdge = SourceGrid.RowDefinitions[0].ActualHeight;
-            int x = Convert.ToInt32(Math.Floor(point.X / actualEdge));
-            int y = Convert.ToInt32(Math.Floor(point.Y / actualEdge));
-            Tile newTile = SourceGrid.Children[y * 10 + x] as Tile;
-
-            if ((_clickedTile == newTile) || (newTile.Type == NodeType.NotAvailable))
-            {
-                _clickedTile.TileLabel.Opacity = 1;
-                SourceGrid.MouseUp -= SourceGridMouseUp;
-                _clickedTile = null;
-                return;
-            }
-
-            switch (_clickedTile.Type)
-            {
-                case NodeType.Start:
-                    OnStartChanged(new StartChangedEventArgs(x, y));
-                    break;
-
-                case NodeType.Goal:
-                    OnGoalChanged(new GoalChangedEventArgs(x, y));
-                    break;
-            }
-
-            _clickedTile = null;
+            _clickedTile.TileLabel.Opacity = 1;
             SourceGrid.MouseUp -= SourceGridMouseUp;
+            _clickedTile = null;
         }
-
-        #region Events invokes
-
-        private void OnWallAdded(WallAddedEventArgs e)
-        {
-            WallAdded?.Invoke(SourceGrid, e);
-        }
-
-        private void OnWallRemoved(WallRemovedEventArgs e)
-        {
-            WallRemoved?.Invoke(SourceGrid, e);
-        }
-
-        private void OnStartChanged(StartChangedEventArgs e)
-        {
-            StartChanged?.Invoke(SourceGrid, e);
-        }
-
-        private void OnGoalChanged(GoalChangedEventArgs e)
-        {
-            GoalChanged?.Invoke(SourceGrid, e);
-        }
-
-        #endregion Events invokes
 
         // Полность очищает сетку и заполняет её пустыми ячейками
         public void Clear()
@@ -281,5 +195,112 @@ namespace PathFindingApp.View.Visualization
 
             return tiles;
         }
+
+        #region Events
+
+        private void SourceGridMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Point point = e.GetPosition(SourceGrid);
+            double actualEdge = SourceGrid.RowDefinitions[0].ActualHeight;
+            int x = Convert.ToInt32(Math.Floor(point.X / actualEdge));
+            int y = Convert.ToInt32(Math.Floor(point.Y / actualEdge));
+            Tile clickedTile = SourceGrid.Children[y * 10 + x] as Tile;
+
+            switch (clickedTile.Type)
+            {
+                case NodeType.NotAvailable:
+                    //clickedTile.LabelStyle = TileStyles.NotVisited;
+                    //clickedTile.Type = NodeType.NotVisited;
+
+                    OnWallRemoved(new WallRemovedEventArgs(x, y));
+                    break;
+
+                case NodeType.Visited:
+                case NodeType.NotVisited:
+                case NodeType.Frontier:
+                    //clickedTile.LabelStyle = TileStyles.NotAvailable;
+                    //clickedTile.Type = NodeType.NotAvailable;
+                    //Panel.SetZIndex(clickedTile, 1);
+
+                    OnWallAdded(new WallAddedEventArgs(x, y));
+                    break;
+
+                case NodeType.Start:
+                case NodeType.Goal:
+                    clickedTile.TileLabel.Opacity = 0.5;
+
+                    _clickedTile = clickedTile;
+                    SourceGrid.MouseUp += SourceGridMouseUp;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        private void SourceGridMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            Point point = e.GetPosition(SourceGrid);
+            double actualEdge = SourceGrid.RowDefinitions[0].ActualHeight;
+            int x = Convert.ToInt32(Math.Floor(point.X / actualEdge));
+            int y = Convert.ToInt32(Math.Floor(point.Y / actualEdge));
+            Tile newTile = SourceGrid.Children[y * 10 + x] as Tile;
+
+            if ((_clickedTile == newTile) || (newTile.Type == NodeType.NotAvailable))
+            {
+                DeselectTile();
+                return;
+            }
+
+            bool worked = false;
+            if (_clickedTile.Type == NodeType.Start && newTile.Type != NodeType.Goal)
+            {
+                OnStartChanged(new StartChangedEventArgs(x, y));
+                worked = true;
+            }
+            else if (_clickedTile.Type == NodeType.Goal && newTile.Type != NodeType.Start)
+            {
+                OnGoalChanged(new GoalChangedEventArgs(x, y));
+                worked = true;
+            }
+
+            if (!worked)
+                DeselectTile();
+
+            _clickedTile = null;
+            SourceGrid.MouseUp -= SourceGridMouseUp;
+        }
+
+        private void GridView_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (_clickedTile != null)
+                DeselectTile();
+        }
+
+        #endregion Events
+
+        #region Event handlers invokes
+
+        private void OnWallAdded(WallAddedEventArgs e)
+        {
+            WallAdded?.Invoke(SourceGrid, e);
+        }
+
+        private void OnWallRemoved(WallRemovedEventArgs e)
+        {
+            WallRemoved?.Invoke(SourceGrid, e);
+        }
+
+        private void OnStartChanged(StartChangedEventArgs e)
+        {
+            StartChanged?.Invoke(SourceGrid, e);
+        }
+
+        private void OnGoalChanged(GoalChangedEventArgs e)
+        {
+            GoalChanged?.Invoke(SourceGrid, e);
+        }
+
+        #endregion Event handlers invokes
     }
 }

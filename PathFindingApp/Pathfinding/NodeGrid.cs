@@ -51,30 +51,35 @@ namespace PathFindingApp.Pathfinding
             int y = node.Pos.Y;
             List<Node> neighbors = new List<Node>();
 
-            // Смена хода часовой стрелки в зависимости от чётности стрелки
-            if ((x + y) % 2 == 0)
+            if (Properties.Settings.Default.EightWay)
             {
                 neighbors.Add(this[x, y - 1]); // up
                 neighbors.Add(this[x - 1, y]); // left
                 neighbors.Add(this[x, y + 1]); // down
                 neighbors.Add(this[x + 1, y]); // right
+                neighbors.Add(this[x + 1, y - 1]); // up right
+                neighbors.Add(this[x - 1, y - 1]); // up left
+                neighbors.Add(this[x - 1, y + 1]); // down left
+                neighbors.Add(this[x + 1, y + 1]); // down right
             }
             else
             {
-                neighbors.Add(this[x + 1, y]); // right
-                neighbors.Add(this[x, y + 1]); // down
-                neighbors.Add(this[x - 1, y]); // left
-                neighbors.Add(this[x, y - 1]); // up
+                // Смена хода часовой стрелки в зависимости от чётности стрелки
+                if ((x + y) % 2 == 0)
+                {
+                    neighbors.Add(this[x, y - 1]); // up
+                    neighbors.Add(this[x - 1, y]); // left
+                    neighbors.Add(this[x, y + 1]); // down
+                    neighbors.Add(this[x + 1, y]); // right
+                }
+                else
+                {
+                    neighbors.Add(this[x + 1, y]); // right
+                    neighbors.Add(this[x, y + 1]); // down
+                    neighbors.Add(this[x - 1, y]); // left
+                    neighbors.Add(this[x, y - 1]); // up
+                }
             }
-
-            //neighbors.Add(this[x, y - 1]); // up
-            //neighbors.Add(this[x - 1, y]); // left
-            //neighbors.Add(this[x, y + 1]); // down
-            //neighbors.Add(this[x + 1, y]); // right
-            //neighbors.Add(this[x + 1, y - 1]); // up right
-            //neighbors.Add(this[x - 1, y - 1]); // up left
-            //neighbors.Add(this[x - 1, y + 1]); // down left
-            //neighbors.Add(this[x + 1, y + 1]); // down right
 
             neighbors.RemoveAll(n => n == null);
             neighbors.RemoveAll(n => n.Type == NodeType.NotAvailable); // Исключаем стены

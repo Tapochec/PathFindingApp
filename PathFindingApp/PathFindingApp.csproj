@@ -56,6 +56,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Pathfinding\Simulating\SearchHistory.cs" />
+    <Compile Include="View\Settings\LeftMarginMultiplierConverter.cs" />
+    <Compile Include="View\Settings\Pages\GlobalSettings.xaml.cs">
+      <DependentUpon>GlobalSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Settings\SettingsWindow.xaml.cs">
+      <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Settings\TreeViewItemExtensions.cs" />
     <Compile Include="View\Visualization\GridViewEvents\GoalChangedEventArgs.cs" />
     <Compile Include="View\Visualization\GridViewEvents\StartChangedEventArgs.cs" />
     <Compile Include="View\Visualization\GridViewEvents\WallAddedEventArgs.cs" />
@@ -63,6 +71,14 @@
     <Compile Include="View\Visualization\Tile.xaml.cs">
       <DependentUpon>Tile.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\Settings\Pages\GlobalSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Settings\SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Visualization\GridView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -119,5 +135,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
