@@ -115,6 +115,22 @@ namespace PathFindingApp.View
 
         #region User input
 
+        #region Upper line
+
+        // Plain view mode
+        private void MenuItem_Plain_Click(object sender, RoutedEventArgs e)
+        {
+            GridView.SwitchToPlain();
+            GridView.ShowStep(-1);
+        }
+
+        // Detail view mode
+        private void MenuItem_Detail_Click(object sender, RoutedEventArgs e)
+        {
+            GridView.SwitchToDetail();
+            GridView.ShowStep(-1);
+        }
+
         private void MenuItem_Settings_Click(object sender, RoutedEventArgs e)
         {
             SettingsWindow window = new SettingsWindow();
@@ -127,6 +143,9 @@ namespace PathFindingApp.View
                 GridView.ShowStep(_currentStep);
             }
         }
+
+        #endregion
+
 
         private void Button_ShowLastStep_Click(object sender, RoutedEventArgs e)
         {

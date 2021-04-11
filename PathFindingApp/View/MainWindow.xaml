@@ -18,6 +18,10 @@
 
         <Menu>
             <MenuItem Height="30" Header="file"/>
+            <MenuItem Header="view mode">
+                <MenuItem Header="Plain" Click="MenuItem_Plain_Click"/>
+                <MenuItem Header="Detail" Click="MenuItem_Detail_Click"/> <!--#FFC3C3C3-->
+            </MenuItem>
             <MenuItem Header="settings" Click="MenuItem_Settings_Click"/>
         </Menu>
         
@@ -27,7 +31,7 @@
                 <ColumnDefinition Width="200"/>
             </Grid.ColumnDefinitions>
 
-            <Border Background="LightSlateGray" x:Name="GridViewBorder">
+            <Border Background="LightSlateGray" x:Name="GridViewBorder" Panel.ZIndex="2">
                 <controls:GridView x:Name="GridView"/>
             </Border>
 

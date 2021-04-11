@@ -23,23 +23,39 @@ namespace PathFindingApp.View.Visualization
     /// </summary>
     public partial class GridView : UserControl
     {
+        public enum ViewGridModes
+        {
+            Detail,
+            Plain
+        }
+
+
         public event EventHandler<WallAddedEventArgs> WallAdded;
         public event EventHandler<WallRemovedEventArgs> WallRemoved;
         public event EventHandler<StartChangedEventArgs> StartChanged;
         public event EventHandler<GoalChangedEventArgs> GoalChanged;
 
+
+        public delegate void ShowStepDelegate(int stepIndex);
+
+
         public int RowCount { get; private set; }
         public int ColCount { get; private set; }
         public bool IsStepShown { get; private set; }
+        public ShowStepDelegate ShowStep { get; private set; }
+        public ViewGridModes Mode { get; private set; }
+
 
         private Tile _clickedTile;
         public SearchHistory History;
+        
 
         public GridView()
         {
             InitializeComponent();
 
             MouseLeave += GridView_MouseLeave;
+            ShowStep = ShowStepDetail;
         }
 
         public void Init(SearchHistory history, int rowCount = 10, int colCount = 10)
@@ -86,7 +102,7 @@ namespace PathFindingApp.View.Visualization
             IsStepShown = false;
         }
 
-        // Заполняет сетку пустыми ячейками
+        // Fills SourceGrid with "empty" tiles
         public void Fill()
         {
             for (int y = 0; y < ColCount; y++)
@@ -104,7 +120,27 @@ namespace PathFindingApp.View.Visualization
             }
         }
 
-        public void ShowStep(int stepIndex)
+        // Switches view mode to plain
+        public void SwitchToPlain()
+        {
+            if (Mode == ViewGridModes.Plain)
+                return;
+
+            ShowStep = ShowStepPlain;
+            Mode = ViewGridModes.Plain;
+        }
+
+        // Switches view mode to detail
+        public void SwitchToDetail()
+        {
+            if (Mode == ViewGridModes.Detail)
+                return;
+
+            ShowStep = ShowStepDetail;
+            Mode = ViewGridModes.Detail;
+        }
+
+        private void ShowStepDetail(int stepIndex)
         {
             if (IsStepShown)
                 Clear();
@@ -142,7 +178,7 @@ namespace PathFindingApp.View.Visualization
                 if (tuple.Item1.HasPrev)
                     tile.ArrowDir = new Point(tuple.Item1.PrevX - tuple.Item1.X, tuple.Item1.PrevY - tuple.Item1.Y);
             }
-            
+
             foreach (Tuple<Position, string> tuple in currentStep.Frontier)
             {
                 Tile tile = tiles[tuple.Item1.X, tuple.Item1.Y];
@@ -157,6 +193,84 @@ namespace PathFindingApp.View.Visualization
                 tile.Type = NodeType.NotAvailable;
                 tile.LabelStyle = TileStyles.NotAvailable;
                 tile.LabelText = "";
+                Panel.SetZIndex(tile, 1);
+            }
+
+            if ((History.Steps.Count - 1) == stepIndex)
+            {
+                if (History.Path != null)
+                    foreach (Position pos in History.Path)
+                    {
+                        Tile tile = tiles[pos.X, pos.Y];
+                        tile.LabelStyle = TileStyles.Path;
+                    }
+            }
+
+            tiles[currentStep.Active.Item1.X, currentStep.Active.Item1.Y].LabelStyle = TileStyles.Active;
+
+            tiles[History.Start.X, History.Start.Y].LabelStyle = TileStyles.Start;
+            tiles[History.Start.X, History.Start.Y].Type = NodeType.Start;
+
+            tiles[History.Goal.X, History.Goal.Y].LabelStyle = TileStyles.Goal;
+            tiles[History.Goal.X, History.Goal.Y].Type = NodeType.Goal;
+
+            IsStepShown = true;
+        }
+
+        private void ShowStepPlain(int stepIndex)
+
+        {
+            if (IsStepShown)
+                Clear();
+
+            Tile[,] tiles = GetTiles();
+
+            if (stepIndex == -1)
+            {
+                foreach (Position pos in History.NotAvailable)
+                {
+                    Tile tile = tiles[pos.X, pos.Y];
+                    tile.Type = NodeType.NotAvailable;
+                    tile.LabelStyle = TileStyles.NotAvailable;
+                    //tile.LabelText = "";
+                    Panel.SetZIndex(tile, 1);
+                }
+
+                tiles[History.Start.X, History.Start.Y].LabelStyle = TileStyles.Start;
+                tiles[History.Start.X, History.Start.Y].Type = NodeType.Start;
+
+                tiles[History.Goal.X, History.Goal.Y].LabelStyle = TileStyles.Goal;
+                tiles[History.Goal.X, History.Goal.Y].Type = NodeType.Goal;
+
+                IsStepShown = true;
+                return;
+            }
+
+            StepHistoryItem currentStep = History.Steps[stepIndex];
+
+            foreach (Tuple<Position, string> tuple in currentStep.Visited)
+            {
+                Tile tile = tiles[tuple.Item1.X, tuple.Item1.Y];
+                tile.LabelStyle = TileStyles.Visited;
+                //tile.LabelText = tuple.Item2;
+                //if (tuple.Item1.HasPrev)
+                //    tile.ArrowDir = new Point(tuple.Item1.PrevX - tuple.Item1.X, tuple.Item1.PrevY - tuple.Item1.Y);
+            }
+
+            foreach (Tuple<Position, string> tuple in currentStep.Frontier)
+            {
+                Tile tile = tiles[tuple.Item1.X, tuple.Item1.Y];
+                tile.Type = NodeType.Frontier;
+                tile.LabelStyle = TileStyles.Frontier;
+                //tile.LabelText = tuple.Item2;
+            }
+
+            foreach (Position pos in History.NotAvailable)
+            {
+                Tile tile = tiles[pos.X, pos.Y];
+                tile.Type = NodeType.NotAvailable;
+                tile.LabelStyle = TileStyles.NotAvailable;
+                //tile.LabelText = "";
                 Panel.SetZIndex(tile, 1);
             }
 
