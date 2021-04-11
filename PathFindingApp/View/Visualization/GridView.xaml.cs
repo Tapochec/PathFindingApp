@@ -56,6 +56,7 @@ namespace PathFindingApp.View.Visualization
 
             MouseLeave += GridView_MouseLeave;
             ShowStep = ShowStepDetail;
+            Panel.SetZIndex(this, -1);
         }
 
         public void Init(SearchHistory history, int rowCount = 10, int colCount = 10)
@@ -389,6 +390,18 @@ namespace PathFindingApp.View.Visualization
         {
             if (_clickedTile != null)
                 DeselectTile();
+        }
+
+        // Zooming
+        private void SourceGrid_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            Grid grid = sender as Grid;
+            MatrixTransform transform = grid.RenderTransform as MatrixTransform;
+            Matrix matrix = transform.Matrix;
+            double scale = e.Delta >= 0 ? 1.1 : (1.0 / 1.1); // scaling factor
+
+            matrix.ScaleAtPrepend(scale, scale, ActualWidth / 2, ActualHeight / 2);
+            transform.Matrix = matrix;
         }
 
         #endregion Events

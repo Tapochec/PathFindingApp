@@ -9,8 +9,13 @@
         Height="700" Width="870"
         MinHeight="650" MinWidth="826"
         >
+    <Window.Resources>
+        <controls:BorderClipConverter x:Key="converter"/>
+    </Window.Resources>
+    
     <Grid>
 
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
             <RowDefinition Height="*" />
@@ -31,8 +36,18 @@
                 <ColumnDefinition Width="200"/>
             </Grid.ColumnDefinitions>
 
-            <Border Background="LightSlateGray" x:Name="GridViewBorder" Panel.ZIndex="2">
+            <Border Background="LightSlateGray" x:Name="GridViewBorder">
                 <controls:GridView x:Name="GridView"/>
+                <Border.Clip>
+                    <MultiBinding Converter="{StaticResource converter}">
+                        <Binding Path="ActualWidth"
+                        RelativeSource="{RelativeSource Self}"/>
+                        <Binding Path="ActualHeight"
+                        RelativeSource="{RelativeSource Self}"/>
+                        <Binding Path="CornerRadius"
+                        RelativeSource="{RelativeSource Self}"/>
+                    </MultiBinding>
+                </Border.Clip>
             </Border>
 
             <StackPanel Grid.Column="1" Background="AliceBlue">

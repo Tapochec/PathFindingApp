@@ -121,14 +121,14 @@ namespace PathFindingApp.View
         private void MenuItem_Plain_Click(object sender, RoutedEventArgs e)
         {
             GridView.SwitchToPlain();
-            GridView.ShowStep(-1);
+            GridView.ShowStep(_currentStep);
         }
 
         // Detail view mode
         private void MenuItem_Detail_Click(object sender, RoutedEventArgs e)
         {
             GridView.SwitchToDetail();
-            GridView.ShowStep(-1);
+            GridView.ShowStep(_currentStep);
         }
 
         private void MenuItem_Settings_Click(object sender, RoutedEventArgs e)

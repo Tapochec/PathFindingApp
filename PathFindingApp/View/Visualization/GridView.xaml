@@ -8,9 +8,14 @@
              d:DesignHeight="500" d:DesignWidth="500"
              Width="600" Height="600"
              
-             Background="Black"
+             Background="Transparent"
              Padding="1">
-    <Grid x:Name="SourceGrid" MouseDown="SourceGridMouseDown" Background="Transparent">
-        
+    <Grid x:Name="SourceGrid"
+          MouseDown="SourceGridMouseDown"
+          MouseWheel="SourceGrid_MouseWheel"
+          Background="Transparent">
+        <Grid.RenderTransform>
+            <MatrixTransform/>
+        </Grid.RenderTransform>
     </Grid>
 </UserControl>

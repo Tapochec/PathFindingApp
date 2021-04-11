@@ -64,6 +64,7 @@
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Settings\TreeViewItemExtensions.cs" />
+    <Compile Include="View\BorderClipConverter.cs" />
     <Compile Include="View\Visualization\GridViewEvents\GoalChangedEventArgs.cs" />
     <Compile Include="View\Visualization\GridViewEvents\StartChangedEventArgs.cs" />
     <Compile Include="View\Visualization\GridViewEvents\WallAddedEventArgs.cs" />
