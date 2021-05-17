@@ -1,22 +1,12 @@
-﻿using PathFindingApp.Pathfinding;
-using PathFindingApp.Pathfinding.Simulating;
-using PathFindingApp.Properties;
-using PathFindingApp.View.Settings;
+﻿using PathFindingApp.View.Settings;
 using PathFindingApp.View.Visualization.GridViewEvents;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using PathfindingLib.Pathfinding;
+using PathfindingLib.Pathfinding.Simulating;
+using System.Configuration;
+using PathfindingLib;
 
 namespace PathFindingApp.View
 {
@@ -34,6 +24,9 @@ namespace PathFindingApp.View
         public MainWindow()
         {
             InitializeComponent();
+
+            // TODO: Разобраться с файлом настроек и не городить такие безобразные строчки
+            GlobalSettings.EightWay = Properties.Settings.Default.EightWay;
 
             // Data
             _nodeGrid = NodeGrid.CreateNodeGrid();

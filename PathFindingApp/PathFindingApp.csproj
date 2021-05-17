@@ -35,8 +35,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Accessibility" />
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.OracleClient" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -55,7 +63,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Pathfinding\Simulating\SearchHistory.cs" />
     <Compile Include="View\Settings\LeftMarginMultiplierConverter.cs" />
     <Compile Include="View\Settings\Pages\GlobalSettings.xaml.cs">
       <DependentUpon>GlobalSettings.xaml</DependentUpon>
@@ -92,8 +99,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Pathfinding\Position.cs" />
-    <Compile Include="Pathfinding\Simulating\StepHistoryItem.cs" />
     <Compile Include="View\Visualization\GridView.xaml.cs">
       <DependentUpon>GridView.xaml</DependentUpon>
     </Compile>
@@ -107,10 +112,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Pathfinding\NodeGrid.cs" />
-    <Compile Include="Pathfinding\Node.cs" />
-    <Compile Include="Pathfinding\NodeType.cs" />
-    <Compile Include="Pathfinding\WidthSearch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -136,6 +137,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\CSharp pathfinding and other\PathfindingLib\PathfindingLib.csproj">
+      <Project>{04ae1628-09b9-4553-b89d-878b1d73ecd5}</Project>
+      <Name>PathfindingLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

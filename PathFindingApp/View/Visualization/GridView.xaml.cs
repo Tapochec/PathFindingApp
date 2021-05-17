@@ -1,20 +1,11 @@
-﻿using PathFindingApp.Pathfinding;
-using PathFindingApp.Pathfinding.Simulating;
-using PathFindingApp.View.Visualization.GridViewEvents;
+﻿using PathFindingApp.View.Visualization.GridViewEvents;
+using PathfindingLib.Pathfinding;
+using PathfindingLib.Pathfinding.Simulating;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace PathFindingApp.View.Visualization
 {

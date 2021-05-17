@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Configuration;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace PathFindingApp.View.Settings.Pages
 {
@@ -34,7 +24,8 @@ namespace PathFindingApp.View.Settings.Pages
             bool newVal = (bool)EightWayCheckBox.IsChecked;
             if (newVal != Properties.Settings.Default.EightWay)
             {
-                Properties.Settings.Default.EightWay = newVal;
+                // TODO: Разобраться с файлом настроек и не городить такие безобразные строчки
+                PathfindingLib.GlobalSettings.EightWay = Properties.Settings.Default.EightWay = newVal;
                 Properties.Settings.Default.Save();
                 SettingChanged?.Invoke();
             }
