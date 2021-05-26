@@ -17,7 +17,7 @@ namespace PathFindingApp.View
     {
         private Node _start;
         private Node _goal;
-        private NodeGrid _nodeGrid;
+        private SquareGrid _nodeGrid;
         private SearchHistory _history;
         private int _currentStep = -1;
 
@@ -29,13 +29,13 @@ namespace PathFindingApp.View
             GlobalSettings.EightWay = Properties.Settings.Default.EightWay;
 
             // Data
-            _nodeGrid = NodeGrid.CreateNodeGrid();
+            _nodeGrid = SquareGrid.CreateWithForest();
             _start = _nodeGrid[3, 3];
             _start.Type = NodeType.Start;
             _goal = _nodeGrid[8, 7];
             _goal.Type = NodeType.Goal;
             _nodeGrid.AddWall(8, 1);
-            _history = _history = WidthSearch.FillGridWithHistory(_nodeGrid, _start, _goal);
+            _history = _history = DijkstraSearch.SearchWithHistory(_nodeGrid, _start, _goal);
 
             // View
             GridView.Init(_history);
@@ -49,7 +49,7 @@ namespace PathFindingApp.View
 
         private void UpdateSearch()
         {
-            _history = WidthSearch.FillGridWithHistory(_nodeGrid, _start, _goal);
+            _history = DijkstraSearch.SearchWithHistory(_nodeGrid, _start, _goal);
             GridView.History = _history;
         }
 
@@ -90,7 +90,6 @@ namespace PathFindingApp.View
 
             _start = _nodeGrid[e.X, e.Y];
             _start.Type = NodeType.Start;
-            _start.Prev = null;
             UpdateSearch();
             UpdateCurrentStepView();
         }
@@ -101,7 +100,6 @@ namespace PathFindingApp.View
 
             _goal = _nodeGrid[e.X, e.Y];
             _goal.Type = NodeType.Goal;
-            _goal.Prev = null;
             UpdateSearch();
             UpdateCurrentStepView();
         }

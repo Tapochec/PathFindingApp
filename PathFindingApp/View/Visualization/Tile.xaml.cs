@@ -97,6 +97,10 @@ namespace PathFindingApp.View.Visualization
                     labelStyle = TileStyles.Visited;
                     break;
 
+                case NodeType.Forest:
+                    labelStyle = TileStyles.Forest;
+                    break;
+
                 case NodeType.NotVisited:
                     labelStyle = TileStyles.NotVisited;
                     break;
@@ -125,6 +129,7 @@ namespace PathFindingApp.View.Visualization
     {
         public static readonly Style Default = Create(Brushes.White);
         public static readonly Style Visited = Create(FromHex("ccbfb3"));
+        public static readonly Style Forest = Create(FromHex("8bad85"));
         public static readonly Style NotVisited = Create(FromHex("ddd5d5"));
         public static readonly Style NotAvailable = Create(FromHex("868679"), null, -1);
         public static readonly Style Frontier = Create(FromHex("6688cc"));

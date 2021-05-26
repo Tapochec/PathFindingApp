@@ -2,6 +2,7 @@
 using PathfindingLib.Pathfinding;
 using PathfindingLib.Pathfinding.Simulating;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -162,13 +163,15 @@ namespace PathFindingApp.View.Visualization
 
             StepHistoryItem currentStep = History.Steps[stepIndex];
 
-            foreach (Tuple<Position, string> tuple in currentStep.Visited)
+            foreach (KeyValuePair<Tuple<Position, string, NodeType>, Position> pair in currentStep.CameFrom)
             {
-                Tile tile = tiles[tuple.Item1.X, tuple.Item1.Y];
-                tile.LabelStyle = TileStyles.Visited;
-                tile.LabelText = tuple.Item2;
-                if (tuple.Item1.HasPrev)
-                    tile.ArrowDir = new Point(tuple.Item1.PrevX - tuple.Item1.X, tuple.Item1.PrevY - tuple.Item1.Y);
+                Tile tile = tiles[pair.Key.Item1.X, pair.Key.Item1.Y];
+                tile.LabelStyle = pair.Key.Item3 == NodeType.Visited ? TileStyles.Visited : TileStyles.Forest;
+                tile.LabelText = pair.Key.Item2;
+
+                // Creats an arrow to prev node in ui
+                if (pair.Value != Position.NaN)
+                    tile.ArrowDir = new Point(pair.Value.X - pair.Key.Item1.X, pair.Value.Y - pair.Key.Item1.Y);
             }
 
             foreach (Tuple<Position, string> tuple in currentStep.Frontier)
@@ -240,13 +243,10 @@ namespace PathFindingApp.View.Visualization
 
             StepHistoryItem currentStep = History.Steps[stepIndex];
 
-            foreach (Tuple<Position, string> tuple in currentStep.Visited)
+            foreach (KeyValuePair<Tuple<Position, string, NodeType>, Position> pair in currentStep.CameFrom)
             {
-                Tile tile = tiles[tuple.Item1.X, tuple.Item1.Y];
-                tile.LabelStyle = TileStyles.Visited;
-                //tile.LabelText = tuple.Item2;
-                //if (tuple.Item1.HasPrev)
-                //    tile.ArrowDir = new Point(tuple.Item1.PrevX - tuple.Item1.X, tuple.Item1.PrevY - tuple.Item1.Y);
+                Tile tile = tiles[pair.Key.Item1.X, pair.Key.Item1.Y];
+                tile.LabelStyle = pair.Key.Item3 == NodeType.Visited ? TileStyles.Visited : TileStyles.Forest;
             }
 
             foreach (Tuple<Position, string> tuple in currentStep.Frontier)
