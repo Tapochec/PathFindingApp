@@ -142,8 +142,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CSharp pathfinding and other\PathfindingLib\PathfindingLib.csproj">
-      <Project>{04ae1628-09b9-4553-b89d-878b1d73ecd5}</Project>
+    <ProjectReference Include="..\..\csharp-pathfinding-dll\PathfindingLib\PathfindingLib.csproj">
+      <Project>{04AE1628-09B9-4553-B89D-878B1D73ECD5}</Project>
       <Name>PathfindingLib</Name>
     </ProjectReference>
   </ItemGroup>

@@ -1,12 +1,11 @@
 ﻿using PathFindingApp.View.Settings;
 using PathFindingApp.View.Visualization.GridViewEvents;
-using System.Linq;
+using PathfindingLib;
+using PathfindingLib.Pathfinding;
+using PathfindingLib.Pathfinding.Algorithms.Searching;
+using PathfindingLib.Pathfinding.Simulating;
 using System.Windows;
 using System.Windows.Controls;
-using PathfindingLib.Pathfinding;
-using PathfindingLib.Pathfinding.Simulating;
-using System.Configuration;
-using PathfindingLib;
 
 namespace PathFindingApp.View
 {
@@ -18,6 +17,7 @@ namespace PathFindingApp.View
         private Node _start;
         private Node _goal;
         private SquareGrid _nodeGrid;
+        private ISearchingAlg _searchingAlg;
         private SearchHistory _history;
         private int _currentStep = -1;
 
@@ -29,13 +29,14 @@ namespace PathFindingApp.View
             GlobalSettings.EightWay = Properties.Settings.Default.EightWay;
 
             // Data
+            _searchingAlg = new DijkstraSearch();
             _nodeGrid = SquareGrid.CreateWithForest();
             _start = _nodeGrid[3, 3];
             _start.Type = NodeType.Start;
             _goal = _nodeGrid[8, 7];
             _goal.Type = NodeType.Goal;
             _nodeGrid.AddWall(8, 1);
-            _history = _history = DijkstraSearch.SearchWithHistory(_nodeGrid, _start, _goal);
+            _history = _history = _searchingAlg.SearchWithHistory(_nodeGrid, _start, _goal);
 
             // View
             GridView.Init(_history);
@@ -49,7 +50,7 @@ namespace PathFindingApp.View
 
         private void UpdateSearch()
         {
-            _history = DijkstraSearch.SearchWithHistory(_nodeGrid, _start, _goal);
+            _history = _searchingAlg.SearchWithHistory(_nodeGrid, _start, _goal);
             GridView.History = _history;
         }
 
